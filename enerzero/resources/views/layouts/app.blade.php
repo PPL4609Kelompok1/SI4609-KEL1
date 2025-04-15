@@ -68,11 +68,11 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+                    <a href="{{ route('recommendations') }}" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200 {{ request()->routeIs('recommendations') ? 'sidebar-active text-green-700 font-semibold' : '' }}">
                         <i class="fas fa-lightbulb"></i>
                         <span>Recommendation</span>
                     </a>
-                </li>
+                </li>                
                 <li>
                     <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
                         <i class="fas fa-map"></i>
