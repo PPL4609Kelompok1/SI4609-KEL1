@@ -38,7 +38,7 @@
         <nav class="mt-6">
             <ul>
                 <li>
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-6 py-3 sidebar-active text-green-700 font-semibold">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200 {{ Route::is('dashboard*') ? 'sidebar-active text-green-700 font-semibold' : '' }}">
                         <i class="fas fa-desktop"></i>
                         <span>Dashboard</span>
                     </a>
@@ -68,9 +68,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('recommendations') }}" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200 {{ request()->routeIs('recommendations') ? 'sidebar-active text-green-700 font-semibold' : '' }}">
-                        <i class="fas fa-lightbulb"></i>
-                        <span>Recommendation</span>
+                    <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200 {{ request()->routeIs('products.index') ? 'sidebar-active text-green-700 font-semibold' : '' }}">
+                        <i class="fas fa-solar-panel"></i>
+                        <span>Produk</span>
                     </a>
                 </li>                
                 <li>
