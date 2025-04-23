@@ -24,8 +24,11 @@
         .sidebar-active {
             background-color: #a8e6cf;
             border-left: 4px solid #34a853;
+<<<<<<< HEAD
             color: green;
             font-weight: bold;
+=======
+>>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
         }
     </style>
 </head>
@@ -40,53 +43,84 @@
         <nav class="mt-6">
             <ul>
                 <li>
+<<<<<<< HEAD
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-6 py-3 {{ request()->is('/') ? 'sidebar-active' : '' }} hover:bg-green-200">
+=======
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-6 py-3 sidebar-active text-green-700 font-semibold">
+>>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
                         <i class="fas fa-desktop"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
+<<<<<<< HEAD
                     <a href="#" class="flex items-center gap-3 px-6 py-3 {{ request()->is('calculator') ? 'sidebar-active' : '' }} hover:bg-green-200">
+=======
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+>>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
                         <i class="fas fa-calculator"></i>
                         <span>Calculator</span>
                     </a>
                 </li>
                 <li>
+<<<<<<< HEAD
                     <a href="#" class="flex items-center gap-3 px-6 py-3 {{ request()->is('education') ? 'sidebar-active' : '' }} hover:bg-green-200">
+=======
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+>>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
                         <i class="fas fa-book-open"></i>
                         <span>Education</span>
                     </a>
                 </li>
                 <li>
+<<<<<<< HEAD
                     <a href="#" class="flex items-center gap-3 px-6 py-3 {{ request()->is('simulation') ? 'sidebar-active' : '' }} hover:bg-green-200">
+=======
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+>>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
                         <i class="fas fa-camera"></i>
                         <span>Simulation</span>
                     </a>
                 </li>
                 <li>
+<<<<<<< HEAD
                     <a href="/forum" class="flex items-center gap-3 px-6 py-3 {{ request()->is('forum') ? 'sidebar-active' : '' }} hover:bg-green-200">
+=======
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+>>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
                         <i class="fas fa-comments"></i>
                         <span>Forum</span>
                     </a>
                 </li>
                 <li>
+<<<<<<< HEAD
                     <a href="/recommendations" class="flex items-center gap-3 px-6 py-3 {{ request()->is('recommendations') ? 'sidebar-active' : '' }} hover:bg-green-200">
+=======
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+>>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
                         <i class="fas fa-lightbulb"></i>
                         <span>Recommendation</span>
                     </a>
                 </li>
                 <li>
+<<<<<<< HEAD
                     <a href="#" class="flex items-center gap-3 px-6 py-3 {{ request()->is('map') ? 'sidebar-active' : '' }} hover:bg-green-200">
+=======
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+>>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
                         <i class="fas fa-map"></i>
                         <span>Map</span>
                     </a>
                 </li>
+<<<<<<< HEAD
                 <li>
                     <a href="/leaderboard" class="flex items-center gap-3 px-6 py-3 {{ request()->is('leaderboard') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-stairs"></i>
                         <span>Leaderboard</span>
                     </a>
                 </li>
+=======
+>>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
             </ul>
         </nav>
     </aside>
