@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
-<<<<<<< HEAD
 use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\LeaderboardController;
@@ -15,7 +14,3 @@ Route::get('/leaderboard/{category?}', [LeaderboardController::class, 'showUserR
 Route::get('/', [AuthController::class, 'login'])->name('login');
 Route::view('/login', 'auth.login')->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
-=======
-
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
->>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
