@@ -14,5 +14,3 @@ Route::get('/leaderboard/{category?}', [LeaderboardController::class, 'showUserR
 Route::get('/', [AuthController::class, 'login'])->name('login');
 Route::view('/login', 'auth.login')->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
-Route::view('/register', 'auth.regist')->name('regist');
-Route::post('/register', [AuthController::class, 'store'])->name('register');
