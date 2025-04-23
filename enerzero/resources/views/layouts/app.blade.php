@@ -38,7 +38,7 @@
         <nav class="mt-6">
             <ul>
                 <li>
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-6 py-3 sidebar-active text-green-700 font-semibold">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-6 py-3 {{ request()->routeIs('dashboard') ? 'sidebar-active text-green-700 font-semibold' : 'hover:bg-green-200' }}">
                         <i class="fas fa-desktop"></i>
                         <span>Dashboard</span>
                     </a>
@@ -74,7 +74,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+                    <a href="{{ route('maps.index') }}" class="flex items-center gap-3 px-6 py-3 {{ request()->routeIs('maps.*') ? 'sidebar-active text-green-700 font-semibold' : 'hover:bg-green-200' }}">
                         <i class="fas fa-map"></i>
                         <span>Map</span>
                     </a>
@@ -85,7 +85,14 @@
 
     <!-- Main Content -->
     <main class="flex-1 p-8 relative overflow-auto">
+        @if(session('success'))
+            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
         @yield('content')
     </main>
+
+    @stack('scripts')
 </body>
 </html>
