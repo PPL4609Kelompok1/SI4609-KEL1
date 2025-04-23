@@ -29,7 +29,7 @@
     <!-- Main Cards Wrapper -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <!-- Simulation Data Summary -->
+        <!-- Simulation Data Summary --->
         <article class="col-span-2 bg-white rounded-lg p-6 shadow-md">
             <h2 class="text-green-700 font-semibold text-lg mb-4">SIMULATION DATA SUMMARY</h2>
             <div class="flex gap-6">
