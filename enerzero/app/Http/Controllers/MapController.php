@@ -18,6 +18,7 @@ class MapController extends Controller
 
     /**
      * Display a listing of the resource.
+     * untuk display
      */
     public function index()
     {
