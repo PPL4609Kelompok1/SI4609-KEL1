@@ -68,9 +68,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
-                        <i class="fas fa-lightbulb"></i>
-                        <span>Recommendation</span>
+                    <a href="{{ route('index') }}" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+                        <i class="fas fa-bolt"></i>
+                        <span>Analisis Energi</span>
                     </a>
                 </li>
                 <li>

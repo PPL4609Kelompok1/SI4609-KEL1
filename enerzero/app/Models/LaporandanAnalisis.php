@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LaporandanAnalisis extends Model
+class EnergyUsage extends Model
 {
-    //
+    protected $table = 'user'; 
+
+    protected $fillable = ['watt', 'recorded_at'];
 }
