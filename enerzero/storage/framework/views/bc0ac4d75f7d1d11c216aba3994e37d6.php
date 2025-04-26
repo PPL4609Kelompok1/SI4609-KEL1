@@ -1,4 +1,4 @@
-<?php $__env->startSection('title', 'Enerzero'); ?>
+<?php $__env->startSection('title', 'Enerzero | Dashboard'); ?>
 
 <?php $__env->startSection('content'); ?>
     <div class="space-y-6">
