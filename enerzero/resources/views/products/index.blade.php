@@ -36,7 +36,7 @@
         @foreach ($products as $product)
         <article class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
             <a href="{{ $product->marketplace_url }}" target="_blank" class="block">
-                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-40 object-cover rounded mb-4">
+                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-center h-40 object-cover rounded mb-4">
                 <h2 class="text-lg font-bold text-green-800">{{ $product->name }}</h2>
                 <p class="text-green-600 font-semibold mb-2">Harga: Rp {{ number_format($product->price, 0, ',', '.') }},-</p>
                 <p class="text-gray-600 text-sm mb-2">{{ $product->description }}</p>
@@ -60,6 +60,30 @@
                     @endforeach
                 </div>
             @endif
+
+            <form action="{{ route('products.reviews.store', $product) }}" method="POST" class="mt-4">
+                @csrf
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-700">Rating</label>
+                    <div class="flex items-center gap-1 star-rating" data-product-id="{{ $product->id }}">
+                        @for($i = 1; $i <= 5; $i++)
+                            <input type="radio" name="rating" value="{{ $i }}" id="rating{{ $product->id }}_{{ $i }}" required
+                                class="hidden">
+                            <label for="rating{{ $product->id }}_{{ $i }}" class="cursor-pointer text-2xl text-gray-300 hover:text-yellow-500 transition-colors">
+                                <i class="fas fa-star"></i>
+                            </label>
+                        @endfor
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="block text-sm font-medium text-gray-700">Komentar</label>
+                    <textarea name="comment" id="comment" rows="3" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
+                    Kirim Ulasan
+                </button>
+            </form>
         </article>
         @endforeach
     </section>
@@ -68,4 +92,72 @@
         {{ $products->links() }}
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all star rating containers
+    const starRatings = document.querySelectorAll('.star-rating');
+    
+    starRatings.forEach(container => {
+        const stars = container.querySelectorAll('label');
+        const inputs = container.querySelectorAll('input[type="radio"]');
+        
+        // Handle star hover
+        stars.forEach((star, index) => {
+            star.addEventListener('mouseover', () => {
+                // Highlight all stars up to the hovered one
+                stars.forEach((s, i) => {
+                    if (i <= index) {
+                        s.querySelector('i').classList.add('text-yellow-500');
+                        s.querySelector('i').classList.remove('text-gray-300');
+                    } else {
+                        s.querySelector('i').classList.remove('text-yellow-500');
+                        s.querySelector('i').classList.add('text-gray-300');
+                    }
+                });
+            });
+        });
+        
+        // Handle star selection
+        inputs.forEach((input, index) => {
+            input.addEventListener('change', () => {
+                // Update star colors based on selection
+                stars.forEach((star, i) => {
+                    if (i <= index) {
+                        star.querySelector('i').classList.add('text-yellow-500');
+                        star.querySelector('i').classList.remove('text-gray-300');
+                    } else {
+                        star.querySelector('i').classList.remove('text-yellow-500');
+                        star.querySelector('i').classList.add('text-gray-300');
+                    }
+                });
+            });
+        });
+        
+        // Reset stars when mouse leaves the container
+        container.addEventListener('mouseleave', () => {
+            const selectedInput = container.querySelector('input[type="radio"]:checked');
+            if (!selectedInput) {
+                stars.forEach(star => {
+                    star.querySelector('i').classList.remove('text-yellow-500');
+                    star.querySelector('i').classList.add('text-gray-300');
+                });
+            } else {
+                const selectedIndex = Array.from(inputs).indexOf(selectedInput);
+                stars.forEach((star, i) => {
+                    if (i <= selectedIndex) {
+                        star.querySelector('i').classList.add('text-yellow-500');
+                        star.querySelector('i').classList.remove('text-gray-300');
+                    } else {
+                        star.querySelector('i').classList.remove('text-yellow-500');
+                        star.querySelector('i').classList.add('text-gray-300');
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+@endpush
 @endsection

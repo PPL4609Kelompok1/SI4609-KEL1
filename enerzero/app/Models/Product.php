@@ -6,8 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'image',
+        'category'
+    ];
+
     public function reviews()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(ProductReview::class);
     }    
 }

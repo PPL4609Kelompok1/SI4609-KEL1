@@ -87,5 +87,7 @@
     <main class="flex-1 p-8 relative overflow-auto">
         @yield('content')
     </main>
+
+    @stack('scripts')
 </body>
 </html>
