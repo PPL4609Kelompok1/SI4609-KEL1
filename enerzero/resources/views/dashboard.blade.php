@@ -151,9 +151,9 @@
                 <p>Energy Factor Saver Electronic</p>
                 <p class="mt-2">Price <br> <span class="font-bold text-lg">Rp 250.000,-</span></p>
             </div>
-            <button class="mt-4 bg-yellow-400 text-black w-full py-2 rounded font-semibold hover:bg-yellow-300">
-                See Product Detail
-            </button>
+            <a href="{{ route('products.show', 1) }}" class="mt-4 block bg-yellow-400 text-black w-full py-2 rounded font-semibold hover:bg-yellow-300 text-center">
+                Dapatkan Rekomendasi Produk
+            </a>
         </aside>
 
     </section>

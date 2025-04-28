@@ -35,12 +35,12 @@
     <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach ($products as $product)
         <article class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
-            <a href="{{ $product->marketplace_url }}" target="_blank" class="block">
+            <a href="{{ route('products.show', $product->id) }}" class="block">
                 <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-center h-40 object-cover rounded mb-4">
                 <h2 class="text-lg font-bold text-green-800">{{ $product->name }}</h2>
                 <p class="text-green-600 font-semibold mb-2">Harga: Rp {{ number_format($product->price, 0, ',', '.') }},-</p>
-                <p class="text-gray-600 text-sm mb-2">{{ $product->description }}</p>
             </a>
+            <p class="text-gray-600 text-sm mb-2">{{ $product->description }}</p>
             
             @if($product->reviews->count() > 0)
                 <div class="mt-4 bg-gray-50 p-3 rounded-lg">

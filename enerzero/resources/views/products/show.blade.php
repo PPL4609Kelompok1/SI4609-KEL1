@@ -39,7 +39,30 @@
             <!-- Add Review Form -->
             <div class="bg-gray-50 p-4 rounded-lg mb-6">
                 <h4 class="font-semibold text-green-800 mb-3">Tambah Ulasan</h4>
-                @include('reviews._form')
+                <form action="{{ route('products.reviews.store', $product) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="username" value="Pengguna">
+                    <div class="mb-4">
+                        <label for="rating" class="block text-gray-700 mb-2">Rating</label>
+                        <div class="flex items-center gap-1 star-rating">
+                            @for($i = 1; $i <= 5; $i++)
+                                <input type="radio" name="rating" value="{{ $i }}" id="rating{{ $i }}" required
+                                    class="hidden">
+                                <label for="rating{{ $i }}" class="cursor-pointer text-2xl text-gray-300 hover:text-yellow-500 transition-colors">
+                                    <i class="fas fa-star"></i>
+                                </label>
+                            @endfor
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="comment" class="block text-gray-700 mb-2">Komentar</label>
+                        <textarea name="comment" id="comment" rows="3" required
+                            class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                    </div>
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                        Kirim Ulasan
+                    </button>
+                </form>
             </div>
 
             <!-- Reviews List -->
@@ -48,33 +71,42 @@
                     <div class="bg-white border rounded-lg p-4 shadow-sm">
                         <div class="flex justify-between items-start mb-2">
                             <div>
-                                <strong class="text-green-700">{{ $review->username }}</strong>
-                                <span class="text-yellow-500 ml-2">
+                                <h4 class="font-semibold text-green-800">{{ $review->username }}</h4>
+                                <div class="flex items-center gap-1 text-yellow-500">
                                     @for($i = 1; $i <= 5; $i++)
                                         <i class="fas fa-star {{ $i <= $review->rating ? 'text-yellow-500' : 'text-gray-300' }}"></i>
                                     @endfor
-                                </span>
+                                </div>
                             </div>
-                            <div class="flex gap-2">
-                                <!-- Edit Button -->
-                                <button onclick="editReview({{ $review->id }})" class="text-blue-600 hover:text-blue-800">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <!-- Delete Button -->
-                                <form action="{{ route('review.destroy', $review->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800" onclick="return confirm('Apakah Anda yakin ingin menghapus ulasan ini?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
+                            <span class="text-sm text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
                         </div>
                         <p class="text-gray-700">{{ $review->comment }}</p>
                     </div>
                 @empty
-                    <p class="text-gray-500 text-center py-4">Belum ada ulasan untuk produk ini.</p>
+                    <p class="text-gray-500">Belum ada ulasan untuk produk ini.</p>
                 @endforelse
+            </div>
+        </div>
+
+        <!-- Recommendations Section -->
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold text-green-800 mb-4">Produk Lainnya</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach($recommendations ?? [] as $recommendedProduct)
+                    <article class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+                        <a href="{{ route('products.show', $recommendedProduct->id) }}" class="block">
+                            <h3 class="text-lg font-bold text-green-800">{{ $recommendedProduct->name }}</h3>
+                            <p class="text-green-600 font-semibold mb-2">Harga: Rp {{ number_format($recommendedProduct->price, 0, ',', '.') }},-</p>
+                            <p class="text-gray-600 text-sm mb-2">{{ $recommendedProduct->description }}</p>
+                            <div class="flex items-center gap-1">
+                                <span class="text-sm text-gray-600">Efisiensi Energi:</span>
+                                @for($i = 1; $i <= 5; $i++)
+                                    <i class="fas fa-star {{ $i <= $recommendedProduct->energy_efficiency_rating ? 'text-yellow-500' : 'text-gray-300' }}"></i>
+                                @endfor
+                            </div>
+                        </a>
+                    </article>
+                @endforeach
             </div>
         </div>
     </div>
@@ -145,6 +177,70 @@ function closeEditModal() {
     document.getElementById('editReviewModal').classList.add('hidden');
     document.getElementById('editReviewModal').classList.remove('flex');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all star rating containers
+    const starRatings = document.querySelectorAll('.star-rating');
+    
+    starRatings.forEach(container => {
+        const stars = container.querySelectorAll('label');
+        const inputs = container.querySelectorAll('input[type="radio"]');
+        
+        // Handle star hover
+        stars.forEach((star, index) => {
+            star.addEventListener('mouseover', () => {
+                // Highlight all stars up to the hovered one
+                stars.forEach((s, i) => {
+                    if (i <= index) {
+                        s.querySelector('i').classList.add('text-yellow-500');
+                        s.querySelector('i').classList.remove('text-gray-300');
+                    } else {
+                        s.querySelector('i').classList.remove('text-yellow-500');
+                        s.querySelector('i').classList.add('text-gray-300');
+                    }
+                });
+            });
+        });
+        
+        // Handle star selection
+        inputs.forEach((input, index) => {
+            input.addEventListener('change', () => {
+                // Update star colors based on selection
+                stars.forEach((star, i) => {
+                    if (i <= index) {
+                        star.querySelector('i').classList.add('text-yellow-500');
+                        star.querySelector('i').classList.remove('text-gray-300');
+                    } else {
+                        star.querySelector('i').classList.remove('text-yellow-500');
+                        star.querySelector('i').classList.add('text-gray-300');
+                    }
+                });
+            });
+        });
+        
+        // Reset stars when mouse leaves the container
+        container.addEventListener('mouseleave', () => {
+            const selectedInput = container.querySelector('input[type="radio"]:checked');
+            if (!selectedInput) {
+                stars.forEach(star => {
+                    star.querySelector('i').classList.remove('text-yellow-500');
+                    star.querySelector('i').classList.add('text-gray-300');
+                });
+            } else {
+                const selectedIndex = Array.from(inputs).indexOf(selectedInput);
+                stars.forEach((star, i) => {
+                    if (i <= selectedIndex) {
+                        star.querySelector('i').classList.add('text-yellow-500');
+                        star.querySelector('i').classList.remove('text-gray-300');
+                    } else {
+                        star.querySelector('i').classList.remove('text-yellow-500');
+                        star.querySelector('i').classList.add('text-gray-300');
+                    }
+                });
+            }
+        });
+    });
+});
 </script>
 @endpush
 @endsection

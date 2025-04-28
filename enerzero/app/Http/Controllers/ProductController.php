@@ -31,10 +31,50 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
-    public function show(Product $product)
+    public function show(Product $product, Request $request)
     {
         $product->load('reviews');
-        return view('products.show', compact('product'));
+
+        // Dummy data for recommendations
+        $dummyProducts = [
+            [
+                'id' => 1,
+                'name' => 'Solar Panel 100W',
+                'description' => 'High efficiency solar panel with 100W output',
+                'price' => 1500000,
+                'category' => 'solar',
+                'energy_efficiency_rating' => 4,
+                'image_url' => 'https://via.placeholder.com/300x200?text=Solar+Panel',
+                'marketplace_url' => '#'
+            ],
+            [
+                'id' => 2,
+                'name' => 'Wind Turbine 500W',
+                'description' => 'Compact wind turbine suitable for residential use',
+                'price' => 2500000,
+                'category' => 'wind',
+                'energy_efficiency_rating' => 3,
+                'image_url' => 'https://via.placeholder.com/300x200?text=Wind+Turbine',
+                'marketplace_url' => '#'
+            ],
+            [
+                'id' => 3,
+                'name' => 'Solar Panel 200W',
+                'description' => 'Premium solar panel with 200W output',
+                'price' => 2800000,
+                'category' => 'solar',
+                'energy_efficiency_rating' => 5,
+                'image_url' => 'https://via.placeholder.com/300x200?text=Premium+Solar',
+                'marketplace_url' => '#'
+            ]
+        ];
+
+        // Convert dummy data to Product objects
+        $recommendations = collect($dummyProducts)->map(function($product) {
+            return (object) $product;
+        });
+
+        return view('products.show', compact('product', 'recommendations'));
     }
 
     public function store(Request $request)

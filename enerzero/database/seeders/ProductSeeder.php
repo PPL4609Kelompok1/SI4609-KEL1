@@ -22,6 +22,7 @@ class ProductSeeder extends Seeder
                 'price' => 250000,
                 'category' => 'solar',
                 'marketplace_url' => 'https://shopee.co.id/2024-NEW-ELECTRICITY-SAVING-BOX-Household-Electric-Device-Energy-Saving-Box-i.1014017727.24078865165',
+                'energy_efficiency_rating' => 4,
                 'reviews' => [
                     ['username' => 'Budi', 'rating' => 5, 'comment' => 'Produk ini sangat membantu menghemat daya!'],
                     ['username' => 'Ani', 'rating' => 4, 'comment' => 'Cocok untuk rumah dengan pemakaian listrik besar.'],
@@ -34,6 +35,7 @@ class ProductSeeder extends Seeder
                 'price' => 899500,
                 'category' => 'solar',
                 'marketplace_url' => 'https://www.tokopedia.com/pitoserba/solar-cell-panel-surya-100wp-100-wp-100-watt-system-12v-12-volt-poly?utm_source=google&utm_medium=organic&utm_campaign=pdp',
+                'energy_efficiency_rating' => 5,
                 'reviews' => [
                     ['username' => 'Rudi', 'rating' => 5, 'comment' => 'Daya tahan bagus dan efisien!'],
                     ['username' => 'Siti', 'rating' => 4, 'comment' => 'Mudah dipasang, cocok untuk rumah kecil.'],
@@ -46,6 +48,7 @@ class ProductSeeder extends Seeder
                 'price' => 499000,
                 'category' => 'solar',
                 'marketplace_url' => 'https://www.tokopedia.com/paleosky/lampu-jalan-tenaga-surya-new-lampu-taman-tenaga-surya-otomatis-outdoor?utm_source=google&utm_medium=organic&utm_campaign=pdp',
+                'energy_efficiency_rating' => 5,
                 'reviews' => [
                     ['username' => 'Dewi', 'rating' => 5, 'comment' => 'Sangat terang dan hemat listrik!'],
                     ['username' => 'Ahmad', 'rating' => 4, 'comment' => 'Cocok untuk outdoor dan cuaca ekstrem.'],
@@ -58,6 +61,7 @@ class ProductSeeder extends Seeder
                 'price' => 155000,
                 'category' => 'solar',
                 'marketplace_url' => 'https://www.tokopedia.com/butiklampu/power-inverter-dc-12v-ke-ac-220v-300w-u-panel-surya-baterai-ups',
+                'energy_efficiency_rating' => 3,
                 'reviews' => [
                     ['username' => 'Rina', 'rating' => 5, 'comment' => 'Stabil dan cocok untuk perangkat rumah tangga.'],
                     ['username' => 'Hendra', 'rating' => 4, 'comment' => 'Kualitas bagus, sesuai deskripsi.'],
@@ -70,6 +74,7 @@ class ProductSeeder extends Seeder
                 'price' => 5400000,
                 'category' => 'solar',
                 'marketplace_url' => 'https://www.tokopedia.com/ecopowerhome/voz-lifepo4-12-8v-100-ah-lithium-battery-original?utm_source=google&utm_medium=organic&utm_campaign=pdp',
+                'energy_efficiency_rating' => 4,
                 'reviews' => [
                     ['username' => 'Fajar', 'rating' => 5, 'comment' => 'Sangat tahan lama, cocok untuk backup listrik.'],
                     ['username' => 'Linda', 'rating' => 4, 'comment' => 'Pemasangan mudah dan aman.'],
@@ -82,6 +87,7 @@ class ProductSeeder extends Seeder
                 'price' => 650000,
                 'category' => 'solar',
                 'marketplace_url' => 'https://www.tokopedia.com/istartech/tuya-smart-energy-meter-power-80a-wifi-with-current-transformer-clamp-kwh?utm_source=google&utm_medium=organic&utm_campaign=pdp',
+                'energy_efficiency_rating' => 4,
                 'reviews' => [
                     ['username' => 'Rudi', 'rating' => 5, 'comment' => 'Akurasi sangat baik!'],
                     ['username' => 'Siti', 'rating' => 4, 'comment' => 'Bisa bantu saya kurangi tagihan bulanan.'],

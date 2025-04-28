@@ -14,7 +14,9 @@
         @method('PUT')
     @endif
 
-    <input type="hidden" name="product_id" value="{{ $product->id }}">
+    @if(isset($product))
+        <input type="hidden" name="product_id" value="{{ $product->id }}">
+    @endif
 
     <div class="form-group">
         <label for="rating">Rating</label>
@@ -47,6 +49,10 @@
         <button type="submit" class="btn btn-primary">
             {{ isset($review) ? 'Update Review' : 'Submit Review' }}
         </button>
-        <a href="{{ route('products.show', $review->product_id ?? $product->id) }}" class="btn btn-secondary">Cancel</a>
+        @if(isset($product))
+            <a href="{{ route('products.show', $product->id) }}" class="btn btn-secondary">Cancel</a>
+        @else
+            <a href="{{ route('products.index') }}" class="btn btn-secondary">Cancel</a>
+        @endif
     </div>
 </form> 

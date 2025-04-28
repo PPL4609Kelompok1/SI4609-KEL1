@@ -10,8 +10,7 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 // Product routes
 Route::get('/produk', [ProductController::class, 'index'])->name('products.index');
-Route::get('/produk/{id}', [ProductController::class, 'show'])->name('products.show');
-Route::resource('products', ProductController::class);
+Route::get('/produk/{product}', [ProductController::class, 'show'])->name('products.show');
 
 // Review routes
 Route::post('/products/{product}/review', [ReviewController::class, 'store'])->name('review.store');

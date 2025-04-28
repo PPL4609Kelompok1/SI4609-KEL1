@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('brand')->nullable();
             $table->decimal('price', 12, 2);
             $table->text('description')->nullable();
+            $table->integer('energy_efficiency_rating')->nullable();
             $table->timestamps();
         });
     }
