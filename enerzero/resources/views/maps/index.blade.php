@@ -9,11 +9,20 @@
         </a>
     </div>
 
+    @if(isset($error))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <span class="block sm:inline">{{ $error }}</span>
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Map Display -->
         <div class="bg-white rounded-lg shadow-lg p-4">
-            <div id="map" style="width: 100%; height: 500px; position: relative;"></div>
+            <div id="map" style="width: 100%; height: 500px; position: relative; background-color: #f0f0f0;"></div>
             <div id="map-error" class="hidden mt-2 text-red-500 text-sm"></div>
+            <div id="map-debug" class="mt-2 text-gray-500 text-sm"></div>
+            <div id="map-status" class="mt-2 text-blue-500 text-sm"></div>
         </div>
 
         <!-- Locations List -->
@@ -30,6 +39,10 @@
                             @if(isset($stations[$map->id]) && count($stations[$map->id]) > 0)
                                 <p class="text-green-600 text-sm mt-2">
                                     {{ count($stations[$map->id]) }} charging stations nearby
+                                </p>
+                            @else
+                                <p class="text-gray-500 text-sm mt-2">
+                                    No charging stations found nearby
                                 </p>
                             @endif
                         </div>
@@ -63,10 +76,25 @@
         const errorDiv = document.getElementById('map-error');
         errorDiv.textContent = message;
         errorDiv.classList.remove('hidden');
+        console.error('Map Error:', message);
+    }
+
+    function showMapDebug(message) {
+        const debugDiv = document.getElementById('map-debug');
+        debugDiv.textContent = message;
+        console.log('Map Debug:', message);
+    }
+
+    function showMapStatus(message) {
+        const statusDiv = document.getElementById('map-status');
+        statusDiv.textContent = message;
+        console.log('Map Status:', message);
     }
 
     function initMap() {
         try {
+            showMapStatus('Initializing map...');
+            
             const mapElement = document.getElementById('map');
             if (!mapElement) {
                 showMapError('Map container not found');
@@ -74,15 +102,18 @@
             }
 
             const map = new google.maps.Map(mapElement, {
-                zoom: 2,
-                center: { lat: 0, lng: 0 },
+                zoom: 12,
+                center: { lat: -6.914744, lng: 107.609810 }, // Centered on Bandung
                 mapTypeControl: true,
                 streetViewControl: true,
-                fullscreenControl: true
+                fullscreenControl: true,
+                zoomControl: true
             });
 
             const locations = @json($maps);
             const stations = @json($stations);
+            showMapDebug(`Found ${locations.length} locations and ${Object.keys(stations).length} station groups`);
+
             const markers = [];
             const infoWindows = [];
 
@@ -120,27 +151,39 @@
 
             // Add markers for charging stations
             Object.entries(stations).forEach(([locationId, locationStations]) => {
+                if (!Array.isArray(locationStations)) {
+                    showMapDebug(`Invalid stations data for location ${locationId}`);
+                    return;
+                }
+
                 locationStations.forEach(station => {
+                    if (!station.AddressInfo || !station.AddressInfo.Latitude || !station.AddressInfo.Longitude) {
+                        showMapDebug('Invalid station data: missing coordinates');
+                        return;
+                    }
+
                     const marker = new google.maps.Marker({
                         position: { 
                             lat: parseFloat(station.AddressInfo.Latitude), 
                             lng: parseFloat(station.AddressInfo.Longitude) 
                         },
                         map: map,
-                        title: station.AddressInfo.Title,
+                        title: station.AddressInfo.Title || 'Unknown Station',
                         icon: {
                             url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
                         }
                     });
 
-                    const connections = station.Connections
-                        .map(conn => `${conn.ConnectionType.Title} (${conn.PowerKW || 'N/A'} kW)`)
-                        .join('<br>');
+                    const connections = station.Connections && Array.isArray(station.Connections)
+                        ? station.Connections
+                            .map(conn => `${conn.ConnectionType?.Title || 'Unknown'} (${conn.PowerKW || 'N/A'} kW)`)
+                            .join('<br>')
+                        : 'No connection information available';
 
                     const infoWindow = new google.maps.InfoWindow({
                         content: `
                             <div class="p-2">
-                                <h3 class="font-bold">${station.AddressInfo.Title}</h3>
+                                <h3 class="font-bold">${station.AddressInfo.Title || 'Unknown Station'}</h3>
                                 <p class="text-sm">${station.AddressInfo.AddressLine1 || ''}</p>
                                 <p class="text-sm">${station.AddressInfo.Town || ''}</p>
                                 <div class="mt-2">
@@ -169,65 +212,36 @@
                 const bounds = new google.maps.LatLngBounds();
                 markers.forEach(marker => bounds.extend(marker.getPosition()));
                 map.fitBounds(bounds);
+                showMapStatus(`Map initialized with ${markers.length} markers`);
+            } else {
+                showMapStatus('Map initialized but no markers to display');
             }
         } catch (error) {
             console.error('Error initializing map:', error);
-            showMapError('Error loading map: ' + error.message);
-        }
-    }
-
-    async function getStationDetails(id) {
-        try {
-            const response = await fetch(`/maps/stations/${id}`);
-            const station = await response.json();
-            
-            // Create and show a modal with station details
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center';
-            modal.innerHTML = `
-                <div class="bg-white p-6 rounded-lg max-w-lg w-full mx-4">
-                    <h2 class="text-xl font-bold mb-4">${station.AddressInfo.Title}</h2>
-                    <div class="space-y-2">
-                        <p><strong>Address:</strong> ${station.AddressInfo.AddressLine1}</p>
-                        <p><strong>Town:</strong> ${station.AddressInfo.Town}</p>
-                        <p><strong>State:</strong> ${station.AddressInfo.StateOrProvince}</p>
-                        <p><strong>Country:</strong> ${station.AddressInfo.Country.Title}</p>
-                        <h3 class="font-bold mt-4">Connections</h3>
-                        <div class="space-y-2">
-                            ${station.Connections.map(conn => `
-                                <div class="border p-2 rounded">
-                                    <p><strong>Type:</strong> ${conn.ConnectionType.Title}</p>
-                                    <p><strong>Power:</strong> ${conn.PowerKW || 'N/A'} kW</p>
-                                    <p><strong>Status:</strong> ${conn.StatusType ? conn.StatusType.Title : 'Unknown'}</p>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    <button onclick="this.closest('.fixed').remove()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
-                        Close
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        } catch (error) {
-            console.error('Error fetching station details:', error);
+            showMapError('Error initializing map: ' + error.message);
         }
     }
 
     // Load Google Maps API
-    function loadGoogleMaps() {
+    (function loadGoogleMaps() {
+        const apiKey = 'AIzaSyCHyUYFBkjES-mwcnFsyKzXcQSvNz8TBtc';
+        showMapDebug('Loading Google Maps API...');
+        
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&callback=initMap`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
         script.async = true;
         script.defer = true;
+        
         script.onerror = function() {
-            showMapError('Failed to load Google Maps API');
+            showMapError('Failed to load Google Maps API. Please check if your API key is valid and has the correct permissions.');
         };
-        document.head.appendChild(script);
-    }
 
-    // Initialize map when the page loads
-    window.onload = loadGoogleMaps;
+        script.onload = function() {
+            showMapStatus('Google Maps API loaded successfully');
+        };
+
+        document.head.appendChild(script);
+    })();
 </script>
 @endpush
 @endsection 

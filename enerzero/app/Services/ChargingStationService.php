@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ChargingStationService
 {
@@ -12,57 +13,81 @@ class ChargingStationService
 
     public function __construct()
     {
-        $this->apiKey = config('services.openchargemap.key');
+        $this->apiKey = '76557557-2764-473b-8000-500f78b0e999';
     }
 
-    public function getNearbyStations($latitude, $longitude, $radius = 10)
+    public function getNearbyStations($latitude, $longitude, $distance = 10)
     {
-        $cacheKey = "charging_stations_{$latitude}_{$longitude}_{$radius}";
+        $cacheKey = "stations_{$latitude}_{$longitude}_{$distance}";
         
-        return Cache::remember($cacheKey, 3600, function () use ($latitude, $longitude, $radius) {
-            $response = Http::withHeaders([
-                'X-API-Key' => $this->apiKey
-            ])->get($this->baseUrl . '/poi', [
-                'latitude' => $latitude,
-                'longitude' => $longitude,
-                'distance' => $radius,
-                'distanceunit' => 'KM',
-                'maxresults' => 100,
-                'compact' => true,
-                'verbose' => false,
-                'includecomments' => false,
-                'includeconnectiontypes' => true,
-                'includeoperatorinfo' => true,
-                'includeaddressinfo' => true,
-            ]);
+        return Cache::remember($cacheKey, now()->addHours(1), function () use ($latitude, $longitude, $distance) {
+            try {
+                $response = Http::get("{$this->baseUrl}/poi", [
+                    'key' => $this->apiKey,
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
+                    'distance' => $distance,
+                    'distanceunit' => 'KM',
+                    'maxresults' => 50,
+                    'compact' => true,
+                    'verbose' => false,
+                    'includecomments' => false,
+                    'includeconnectiontypes' => true,
+                    'includeoperatorinfo' => true,
+                    'includeaddressinfo' => true
+                ]);
 
-            if ($response->successful()) {
-                return $response->json();
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('OpenChargeMap API Error', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+
+                return [];
+            } catch (\Exception $e) {
+                Log::error('OpenChargeMap API Exception', [
+                    'message' => $e->getMessage()
+                ]);
+                return [];
             }
-
-            return [];
         });
     }
 
     public function getStationDetails($id)
     {
-        $cacheKey = "charging_station_{$id}";
+        $cacheKey = "station_details_{$id}";
         
-        return Cache::remember($cacheKey, 3600, function () use ($id) {
-            $response = Http::withHeaders([
-                'X-API-Key' => $this->apiKey
-            ])->get($this->baseUrl . '/poi/' . $id, [
-                'includecomments' => true,
-                'includeconnectiontypes' => true,
-                'includeoperatorinfo' => true,
-                'includeaddressinfo' => true,
-            ]);
+        return Cache::remember($cacheKey, now()->addHours(1), function () use ($id) {
+            try {
+                $response = Http::get("{$this->baseUrl}/poi/{$id}", [
+                    'key' => $this->apiKey,
+                    'compact' => true,
+                    'verbose' => false,
+                    'includecomments' => true,
+                    'includeconnectiontypes' => true,
+                    'includeoperatorinfo' => true,
+                    'includeaddressinfo' => true
+                ]);
 
-            if ($response->successful()) {
-                return $response->json();
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                Log::error('OpenChargeMap API Error', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+
+                return null;
+            } catch (\Exception $e) {
+                Log::error('OpenChargeMap API Exception', [
+                    'message' => $e->getMessage()
+                ]);
+                return null;
             }
-
-            return null;
         });
     }
 } 

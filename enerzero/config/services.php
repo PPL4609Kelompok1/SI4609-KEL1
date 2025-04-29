@@ -47,7 +47,7 @@ return [
     ],
 
     'openchargemap' => [
-        'key' => env('OPENCHARGEMAP_API_KEY'),
+        'api_key' => env('OPENCHARGEMAP_API_KEY'),
     ],
 
 ];

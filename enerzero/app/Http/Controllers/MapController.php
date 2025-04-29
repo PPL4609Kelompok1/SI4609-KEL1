@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Map;
 use App\Services\ChargingStationService;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MapController extends Controller
 {
@@ -22,18 +22,65 @@ class MapController extends Controller
      */
     public function index()
     {
-        $maps = Map::all();
-        $stations = [];
-        
-        // Get charging stations for each saved location
-        foreach ($maps as $map) {
-            $stations[$map->id] = $this->chargingStationService->getNearbyStations(
-                $map->latitude,
-                $map->longitude
-            );
-        }
+        try {
+            $maps = Map::latest()->get();
+            $stations = [];
+            $stationStats = [
+                'total' => 0,
+                'available' => 0,
+                'types' => []
+            ];
+            
+            foreach ($maps as $map) {
+                $nearbyStations = $this->chargingStationService->getNearbyStations(
+                    $map->latitude,
+                    $map->longitude,
+                    20 // Search radius in KM
+                );
+                
+                $stations[$map->id] = $nearbyStations;
+                
+                // Calculate statistics
+                if (is_array($nearbyStations)) {
+                    $stationStats['total'] += count($nearbyStations);
+                    
+                    foreach ($nearbyStations as $station) {
+                        if (isset($station['Connections'])) {
+                            foreach ($station['Connections'] as $connection) {
+                                $type = $connection['ConnectionType']['Title'] ?? 'Unknown';
+                                if (!isset($stationStats['types'][$type])) {
+                                    $stationStats['types'][$type] = 0;
+                                }
+                                $stationStats['types'][$type]++;
+                            }
+                        }
+                        
+                        // Count available stations
+                        $isAvailable = true;
+                        if (isset($station['StatusType'])) {
+                            $isAvailable = $station['StatusType']['IsOperational'] ?? true;
+                        }
+                        if ($isAvailable) {
+                            $stationStats['available']++;
+                        }
+                    }
+                }
+            }
 
-        return view('maps.index', compact('maps', 'stations'));
+            return view('maps.index', compact('maps', 'stations', 'stationStats'));
+        } catch (\Exception $e) {
+            Log::error('Error in MapController@index', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return view('maps.index', [
+                'maps' => [],
+                'stations' => [],
+                'stationStats' => [],
+                'error' => 'Error loading map data. Please try again later.'
+            ]);
+        }
     }
 
     /**
@@ -49,17 +96,34 @@ class MapController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'latitude' => 'required|numeric|between:-90,90',
+                'longitude' => 'required|numeric|between:-180,180',
+            ]);
 
-        Map::create($validated);
+            $map = Map::create($validated);
 
-        return redirect()->route('maps.index')
-            ->with('success', 'Location created successfully.');
+            // Get nearby stations for the new location
+            $stations = $this->chargingStationService->getNearbyStations(
+                $map->latitude,
+                $map->longitude
+            );
+
+            return redirect()->route('maps.index')
+                ->with('success', 'Location added successfully! Found ' . count($stations) . ' charging stations nearby.');
+        } catch (\Exception $e) {
+            Log::error('Error in MapController@store', [
+                'message' => $e->getMessage(),
+                'data' => $request->all()
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Error saving location. Please try again.']);
+        }
     }
 
     /**
@@ -80,7 +144,12 @@ class MapController extends Controller
      */
     public function edit(Map $map)
     {
-        return view('maps.edit', compact('map'));
+        $stations = $this->chargingStationService->getNearbyStations(
+            $map->latitude,
+            $map->longitude
+        );
+
+        return view('maps.edit', compact('map', 'stations'));
     }
 
     /**
@@ -88,17 +157,28 @@ class MapController extends Controller
      */
     public function update(Request $request, Map $map)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'latitude' => 'required|numeric|between:-90,90',
+                'longitude' => 'required|numeric|between:-180,180',
+            ]);
 
-        $map->update($validated);
+            $map->update($validated);
 
-        return redirect()->route('maps.index')
-            ->with('success', 'Location updated successfully.');
+            return redirect()->route('maps.index')
+                ->with('success', 'Location updated successfully!');
+        } catch (\Exception $e) {
+            Log::error('Error in MapController@update', [
+                'message' => $e->getMessage(),
+                'data' => $request->all()
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Error updating location. Please try again.']);
+        }
     }
 
     /**
@@ -106,10 +186,19 @@ class MapController extends Controller
      */
     public function destroy(Map $map)
     {
-        $map->delete();
+        try {
+            $map->delete();
+            return redirect()->route('maps.index')
+                ->with('success', 'Location deleted successfully!');
+        } catch (\Exception $e) {
+            Log::error('Error in MapController@destroy', [
+                'message' => $e->getMessage(),
+                'map_id' => $map->id
+            ]);
 
-        return redirect()->route('maps.index')
-            ->with('success', 'Location deleted successfully.');
+            return redirect()->back()
+                ->withErrors(['error' => 'Error deleting location. Please try again.']);
+        }
     }
 
     /**
@@ -117,12 +206,65 @@ class MapController extends Controller
      */
     public function getStationDetails($id)
     {
-        $station = $this->chargingStationService->getStationDetails($id);
-        
-        if (!$station) {
-            return response()->json(['error' => 'Station not found'], 404);
-        }
+        try {
+            $station = $this->chargingStationService->getStationDetails($id);
+            
+            if (!$station) {
+                return response()->json([
+                    'error' => 'Station not found',
+                    'message' => 'The requested charging station could not be found.'
+                ], 404);
+            }
 
-        return response()->json($station);
+            // Enhance station details with additional information
+            $stationDetails = [
+                'id' => $station['ID'],
+                'name' => $station['AddressInfo']['Title'],
+                'address' => [
+                    'street' => $station['AddressInfo']['AddressLine1'],
+                    'town' => $station['AddressInfo']['Town'],
+                    'state' => $station['AddressInfo']['StateOrProvince'],
+                    'country' => $station['AddressInfo']['Country']['Title'],
+                    'coordinates' => [
+                        'lat' => $station['AddressInfo']['Latitude'],
+                        'lng' => $station['AddressInfo']['Longitude']
+                    ]
+                ],
+                'connections' => collect($station['Connections'])->map(function($conn) {
+                    return [
+                        'type' => $conn['ConnectionType']['Title'],
+                        'power' => $conn['PowerKW'] ? $conn['PowerKW'] . ' kW' : 'N/A',
+                        'status' => $conn['StatusType']['Title'] ?? 'Unknown',
+                        'isOperational' => $conn['StatusType']['IsOperational'] ?? true
+                    ];
+                })->toArray(),
+                'operator' => [
+                    'name' => $station['OperatorInfo']['Title'] ?? 'Unknown',
+                    'contact' => $station['OperatorInfo']['PhoneNumber'] ?? null,
+                    'website' => $station['OperatorInfo']['WebsiteURL'] ?? null
+                ],
+                'usage' => [
+                    'isPayAtLocation' => $station['UsageType']['IsPayAtLocation'] ?? false,
+                    'isMembershipRequired' => $station['UsageType']['IsMembershipRequired'] ?? false,
+                    'isAccessKeyRequired' => $station['UsageType']['IsAccessKeyRequired'] ?? false
+                ],
+                'status' => [
+                    'isOperational' => $station['StatusType']['IsOperational'] ?? true,
+                    'title' => $station['StatusType']['Title'] ?? 'Unknown'
+                ]
+            ];
+
+            return response()->json($stationDetails);
+        } catch (\Exception $e) {
+            Log::error('Error fetching station details', [
+                'station_id' => $id,
+                'message' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'error' => 'Error fetching station details',
+                'message' => 'An error occurred while fetching the station details.'
+            ], 500);
+        }
     }
 }
