@@ -104,51 +104,31 @@
                 <h3 class="text-green-700 font-semibold text-lg mb-4">FORUM</h3>
 
                 <div class="space-y-4">
-                    <!-- Post 1 -->
-                    <article class="bg-gray-200 p-3 rounded">
-                        <h4 class="font-semibold">
-                            <i class="fas fa-bolt mr-2"></i>
-                            Info buat hemat daya!
-                        </h4>
-                        <p class="text-gray-700 text-sm">
-                            Gimana cara biar hemat daya nih, lagi banyak pemakaian, apa ada caranya? solanya laagi ada acara
-                            cuman takut boncos juga!
-                        </p>
-                        <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                            <i class="far fa-clock"></i>
-                            1 day ago
-                        </div>
-                    </article>
+                    <?php $__empty_1 = true; $__currentLoopData = $topForums; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $forum): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        <a href="<?php echo e(route('forum.show', $forum->id)); ?>">
+                            <article class="bg-gray-200 p-3 rounded hover:bg-gray-300 transition duration-200 mb-2">
+                                <h4 class="font-semibold">
+                                    <i class="fas fa-comments mr-2"></i>
+                                    <?php echo e($forum->title); ?>
 
-                    <!-- Post 2 -->
-                    <article class="bg-gray-200 p-3 rounded">
-                        <h4 class="font-semibold">
-                            <i class="fas fa-lightbulb mr-2"></i>
-                            3 Tips and trick buat usage daya yang oke
-                        </h4>
-                        <p class="text-gray-700 text-sm">
-                            Nih 3 tips dari gw yang sering pake daya energi lumayan banyak, tetapi bisa tetep oke, jadi tips
-                            pertama dari gue itu ini, kalo siang usahain jangan pake lampu, karenakan lu pada udah...
-                        </p>
-                        <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                            <i class="far fa-clock"></i>
-                            10 days ago
-                        </div>
-                    </article>
+                                </h4>
+                                <p class="text-gray-700 text-sm">
+                                    <?php echo e(Str::limit($forum->description, 100)); ?>
 
-                    <!-- Post 3 -->
-                    <article class="bg-gray-200 p-3 rounded">
-                        <h4 class="font-semibold">
-                            <i class="fas fa-bolt mr-2"></i>
-                            Hemat energi pangkalan oke
-                        </h4>
-                        <p class="text-gray-700 text-sm">
-                            Jadi tolong ges gimana menurut kalian tentang penghematan energi untuk kehidupan masa depan
-                            kalian masih masing, yang kalian tau kan juga banyak kejadian nih tentang energi, ban...
-                        </p>
-                    </article>
+                                </p>
+                                <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                    <i class="far fa-clock"></i>
+                                    <?php echo e($forum->created_at->diffForHumans()); ?>
+
+                                </div>
+                            </article>
+                        </a>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                        <p class="text-sm text-gray-600">Belum ada forum.</p>
+                    <?php endif; ?>
                 </div>
             </article>
+
 
             <!-- Recommendation -->
             <aside class="bg-white rounded-lg p-4 shadow-md">

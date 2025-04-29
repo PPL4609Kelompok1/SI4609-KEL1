@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Forum;
+
 
 class DashboardController extends Controller
 {
@@ -18,26 +20,8 @@ class DashboardController extends Controller
             ['label' => 'Really good energy usage', 'color' => 'rgba(44, 132, 52, 0.7)'],
         ];
 
-        $forumPosts = [
-            [
-                'title' => 'Info buat hemat daya!',
-                'content' => 'Gimana cara biar hemat daya nih, lagi banyak pemakaian, apa ada caranya? solanya laagi ada acara cuman takut boncos juga!',
-                'icon' => 'flash',
-                'time' => '1 day ago'
-            ],
-            [
-                'title' => '3 Tips and trick buat usage daya yang oke',
-                'content' => 'Nih 3 tips dari gw yang sering pake daya energi lumayan banyak, tetapi bisa tetep oke...',
-                'icon' => 'lightbulb',
-                'time' => '10 days ago'
-            ],
-            [
-                'title' => 'Hemat energi pangkalan oke',
-                'content' => 'Jadi tolong ges gimana menurut kalian tentang penghematan energi...',
-                'icon' => 'flash',
-                'time' => ''
-            ]
-        ];
+        $topForums = Forum::withCount('likes')->orderBy('likes_count', 'desc')->take(3)->get();
+        return view('dashboard', compact('topForums'));
 
         $recommendation = [
             'image' => '/images/lyumo-us.jpg', // you need to add this image in /public/images/

@@ -8,7 +8,21 @@
 
         <!-- Title section with dropdown menu -->
         <div class="flex justify-between items-start mb-2">
-            <h1 class="text-xl font-bold text-black-800">{{ $forum->title }}</h1>
+
+            <!-- Grup panah dan judul -->
+            <div class="flex items-center gap-x-2">
+                <!-- Tombol Back -->
+                <a href="{{ route('forum') }}" class="text-black hover:text-green-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                            d="M15 19l-7-7 7-7" />
+                    </svg>
+                </a>
+
+                <!-- Judul -->
+                <h1 class="text-xl font-bold text-black-800">{{ $forum->title }}</h1>
+            </div>
 
             @if ($forum->username === 'Mas Agus Indihome')
                 <div class="relative" x-data="{ open: false }">
