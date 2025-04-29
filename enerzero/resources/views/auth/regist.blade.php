@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-png" href="{{ asset('Logo Enerzero.png') }}" />
     <title>Register | Enerzero</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f0fff4;
-            font-family: 'Roboto', sans-serif;
+            height: 98vh;
+            background-image: url("{{ asset('BackGround.png') }}");
+            background-size: cover;
+            font-family: 'Poppins', sans-serif;
         }
         .container {
             display: flex;
@@ -68,36 +70,62 @@
             margin-top: 20px;
             text-align: center;
         }
+        .image-normal {
+            transition: transform 0.5s ease;
+        }
+        .slide-right {
+            transform: translateX(100%);
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="left">
+    <div id="image-container" class="image-normal left">
+        <img src="{{ asset('Logo icon.png')}}" alt="Solar Panel" style="width: 70%;">
+        <img src="{{ asset('LoginBG.png')}}" alt="Solar Panel" style="width: 100%;">
         <h1>Save Energy, Save the world!</h1>
-        <img src="path_to_image" alt="Solar Panel" style="width: 100%;">
     </div>
     <div class="right">
         <h1>Hello, New User!</h1>
         <p>Small energy changes, massive global impact. With Enerzero, transforming how the world uses power!</p>
-        <form action="{{ route('register') }}" method="POST">
+        <form action="{{ route('regist') }}" method="POST">
             @csrf
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
-
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">SIGN UP</button>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" id="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Register</button>
         </form>
         <div class="footer">
-            <p>Already have an account? <a href="{{ route('login') }}">Login</a></p>
+            <p>Already have an account? <a href="{{ route('login') }}" id="go-login">Login</a></p>
         </div>
     </div>
 </div>
+<script>
+    const btnLogin = document.getElementById('go-login');
+    const imageContainer = document.getElementById('image-container');
+
+    btnLogin.addEventListener('click', function(event) {
+        event.preventDefault();
+        imageContainer.classList.add('slide-right');
+        setTimeout(() => {
+            window.location.href = "{{ route('login') }}";
+        }, 500); // waktu animasi 0.5 detik
+    });
+</script>
 
 </body>
 </html>

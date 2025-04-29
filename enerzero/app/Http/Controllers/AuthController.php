@@ -3,71 +3,94 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class AuthController extends Controller
 {
-    // Menangani registrasi pengguna baru
-    public function register(Request $request)
+    /**
+     * Constructor untuk middleware.
+     * Hanya terapkan middleware `auth` untuk metode logout.
+     */
+    public function __construct()
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users',
-            'username' => 'required|string|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        $user = User::create([
-            'email' => $request->email,
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-        ]);
-
-        return response()->json(['message' => 'User registered successfully!', 'user' => $user], 201);
+        $this->middleware('auth')->only('logout');
+        $this->middleware('guest')->except('logout');
     }
 
-    // Menangani login pengguna
-    public function login(Request $request)
+    /**
+     * Login page.
+     */
+    public function login()
     {
-        $credentials = $request->only('email', 'password');
+        // Redirect ke dashboard jika sudah login
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
 
+        return view('auth.login'); // Tampilkan form login
+    }
+
+    /**
+     * Proses login.
+     */
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->only('username', 'password');
+
+        // Validasi login
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            return response()->json(['message' => 'Login successful!', 'user' => $user], 200);
+            $request->session()->regenerate();
+            return redirect()->intended('dashboard');
         }
 
-        return response()->json(['message' => 'Invalid credentials.'], 401);
+        return back()->withErrors([
+            'username' => 'The provided credentials do not match our records.',
+        ]);
     }
 
-    // Menangani logout pengguna
+    /**
+     * Halaman registrasi.
+     */
+    public function register()
+    {
+        return view('auth.regist'); // Tampilkan form registrasi
+    }
+
+    /**
+     * Proses registrasi pengguna baru.
+     */
+    public function store(Request $request)
+    {
+        // Validasi data yang diterima dari form
+        $validatedData = $request->validate([
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Simpan pengguna baru ke database
+        $user = User::create([
+            'username' => $validatedData['username'], // Pastikan username disertakan
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']),
+        ]);
+
+        // Redirect ke halaman login dengan pesan sukses
+        return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
+    }
+
+    /**
+     * Proses logout.
+     */
     public function logout(Request $request)
     {
         Auth::logout();
-        return response()->json(['message' => 'Logout successful!'], 200);
-    }
 
-    // Menangani reset password, jika diperlukan
-    public function resetPassword(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        $user = User::where('email', $request->email)->first();
-        $user->password = Hash::make($request->password);
-        $user->save();
-
-        return response()->json(['message' => 'Password reset successful!'], 200);
+        return redirect()->route('login')->with('success', 'You have been logged out.');
     }
 }
