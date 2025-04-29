@@ -11,6 +11,8 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
+            background-image: url("{{ asset('BackGround.png') }}");
+            background-size: cover;
         }
         /* Scrollbar untuk forum */
         .scrollbar-thin::-webkit-scrollbar {
@@ -24,6 +26,8 @@
         .sidebar-active {
             background-color: #a8e6cf;
             border-left: 4px solid #34a853;
+            color: green;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -38,45 +42,51 @@
         <nav class="mt-6">
             <ul>
                 <li>
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-6 py-3 sidebar-active text-green-700 font-semibold">
+                    <a href="/dashboard" class="flex items-center gap-3 px-6 py-3 {{ request()->is('dashboard') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-desktop"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 {{ request()->is('calculator') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-calculator"></i>
                         <span>Calculator</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 {{ request()->is('education') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-book-open"></i>
                         <span>Education</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 {{ request()->is('simulation') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-camera"></i>
                         <span>Simulation</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+                    <a href="/forum" class="flex items-center gap-3 px-6 py-3 {{ request()->is('forum') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-comments"></i>
                         <span>Forum</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
-                        <i class="fas fa-lightbulb"></i>
-                        <span>Recommendation</span>
+                    <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200 {{ request()->routeIs('products.index') ? 'sidebar-active text-green-700 font-semibold' : '' }}">
+                        <i class="fas fa-solar-panel"></i>
+                        <span>Produk</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 hover:bg-green-200">
+                    <a href="{{ route('maps.index') }}" class="flex items-center gap-3 px-6 py-3 {{ request()->routeIs('maps.*') ? 'sidebar-active text-green-700 font-semibold' : 'hover:bg-green-200' }}">
                         <i class="fas fa-map"></i>
                         <span>Map</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/leaderboard" class="flex items-center gap-3 px-6 py-3 {{ request()->is('leaderboard') ? 'sidebar-active' : '' }} hover:bg-green-200">
+                        <i class="fas fa-stairs"></i>
+                        <span>Leaderboard</span>
                     </a>
                 </li>
             </ul>
