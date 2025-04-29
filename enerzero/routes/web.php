@@ -24,7 +24,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 // Rute untuk pengguna yang sudah login (auth)
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/leaderboard', [LeaderboardController::class, 'showUserRank'])->name('leaderboard.index');
+    Route::get('/leaderboard/{category?}', [LeaderboardController::class, 'showUserRank'])->name('leaderboard.index');
     Route::resource('maps', MapController::class);
     Route::get('maps/stations/{id}', [MapController::class, 'getStationDetails'])->name('maps.stations.details');
     Route::get('/forum', [ForumController::class, 'index'])->name('forum');

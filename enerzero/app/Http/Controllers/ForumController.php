@@ -6,6 +6,7 @@ use App\Models\Forum;
 use Illuminate\Http\Request;
 use App\Models\ForumReply;
 use App\Models\ForumLike;
+use Illuminate\Support\Facades\Auth;
 
 class ForumController extends Controller
 {
@@ -26,6 +27,8 @@ class ForumController extends Controller
     // Menyimpan forum baru
     public function store(Request $request)
     {
+        $user = Auth::user();
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -34,7 +37,7 @@ class ForumController extends Controller
         Forum::create([
             'title' => $request->title,
             'description' => $request->description,
-            'username' => 'Mas Agus Indihome' // Ganti kalau pakai auth
+            'username' => $user->username,
         ]);
 
         return redirect()->route('forum')->with('success', 'Forum berhasil dibuat!');
@@ -80,13 +83,15 @@ class ForumController extends Controller
     // reply 
     public function reply(Request $request, $id)
     {
+        $user = Auth::user();
+
         $request->validate([
             'reply' => 'required|string',
         ]);
 
         ForumReply::create([
             'forum_id' => $id,
-            'username' => 'Mas Agus', // Ganti sesuai user auth
+            'username' => $user->username,
             'reply' => $request->reply,
         ]);
 
@@ -96,8 +101,10 @@ class ForumController extends Controller
     // like function
     public function like($id)
     {
+        $user = Auth::user();
+        
         $forum = Forum::findOrFail($id);
-        $username = 'Mas Agus Indihome'; // Ganti ini ke auth user kalau udah pakai login
+        $username = $user->username; // Ganti ini ke auth user kalau udah pakai login
 
         // Cek apakah user sudah like
         $existingLike = ForumLike::where('forum_id', $id)->where('username', $username)->first();

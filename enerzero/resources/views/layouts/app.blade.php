@@ -42,7 +42,7 @@
         <nav class="mt-6">
             <ul>
                 <li>
-                    <a href="/dashboard" class="flex items-center gap-3 px-6 py-3 {{ request()->is('/') ? 'sidebar-active' : '' }} hover:bg-green-200">
+                    <a href="/dashboard" class="flex items-center gap-3 px-6 py-3 {{ request()->is('dashboard') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-desktop"></i>
                         <span>Dashboard</span>
                     </a>

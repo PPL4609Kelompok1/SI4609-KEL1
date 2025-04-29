@@ -24,7 +24,7 @@
                 <h1 class="text-xl font-bold text-black-800">{{ $forum->title }}</h1>
             </div>
 
-            @if ($forum->username === 'Mas Agus Indihome')
+            @if ($forum->username)
                 <div class="relative" x-data="{ open: false }">
 
                     <!-- Three dots button -->
