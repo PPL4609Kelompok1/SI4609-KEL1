@@ -1,8 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Energy Usage Report')
+@section('title', 'Enerzero | Energy Usage Report')
 
 @section('content')
+@php
+    $maxUsage = max($monthlyUsage->toArray()) ?: 1;
+@endphp
+
 <div class="space-y-6">
     <header class="mb-6 flex items-center justify-between">
         <div class="flex items-center gap-2">
@@ -48,7 +52,7 @@
                         <span>{{ $usage }} kWh</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-green-500 h-2 rounded-full" style="width: {{ ($usage / max($monthlyUsage)) * 100 }}%"></div>
+                        <div class="bg-green-500 h-2 rounded-full" style="width: {{ ($usage / $maxUsage) * 100 }}%"></div>
                     </div>
                 </div>
                 @endforeach
