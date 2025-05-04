@@ -9,6 +9,7 @@ use App\Http\Controllers\ForumController;
 use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\EnergyUsageReportController;
 
 // Rute untuk pengguna yang belum login (guest)
 Route::middleware('guest')->group(function () {
@@ -56,4 +57,11 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('reviews', ReviewController::class)->except(['index', 'show']);
 
     Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
+
+    Route::get('/energy-report', [EnergyUsageReportController::class, 'index'])->name('energy.index');
+    Route::get('/energy/create', [EnergyUsageReportController::class, 'create'])->name('energy.create');
+    Route::post('/energy', [EnergyUsageReportController::class, 'store'])->name('energy.store');
+    Route::get('/energy/{id}/edit', [EnergyUsageReportController::class, 'edit'])->name('energy.edit');
+    Route::put('/energy/{id}', [EnergyUsageReportController::class, 'update'])->name('energy.update');
+    Route::delete('/energy/{id}', [EnergyUsageReportController::class, 'destroy'])->name('energy.destroy');
 });
