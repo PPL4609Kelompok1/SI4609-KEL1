@@ -153,7 +153,11 @@
                 @foreach ($products as $index => $product)
                 <div class="w-full flex-shrink-0">
                     <div class="product-slide w-full h-full">
+<<<<<<< HEAD
                         <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-40 object-contain mb-2 mx-auto" />
+=======
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-40 object-contain mb-2 mx-auto" />
+>>>>>>> add13fb6e65bc622a3c0f8279ea01ddd25a7ad95
                         <div class="text-center">
                             <h4 class="font-bold text-lg text-green-800">{{ $product->name }}</h4>
                             <p class="text-sm text-gray-700">{{ Str::limit($product->description, 80) }}</p>
