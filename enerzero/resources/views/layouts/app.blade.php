@@ -61,11 +61,7 @@
                     </a>
                 </li>
                 <li>
-<<<<<<< HEAD
                     <a href="/energy-report" class="flex items-center gap-3 px-6 py-3 {{ request()->is('simulation') ? 'sidebar-active' : '' }} hover:bg-green-200">
-=======
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 {{ request()->is('simulation') ? 'sidebar-active' : '' }} hover:bg-green-200">
->>>>>>> add13fb6e65bc622a3c0f8279ea01ddd25a7ad95
                         <i class="fas fa-camera"></i>
                         <span>Simulation</span>
                     </a>
