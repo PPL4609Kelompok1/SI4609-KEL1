@@ -2,35 +2,40 @@
 @section('title', 'Map - Enerzero')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">Charging Stations Map</h3>
-                    <div>
-                        <button id="currentLocation" class="btn btn-info me-2">
+<div class="min-h-screen bg-green-100">
+    <div class="w-full">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-4 bg-gradient-to-r from-blue-600 to-blue-800">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+                        Charging Stations Map
+                    </h1>
+                    <div class="flex flex-wrap gap-3 items-center">
+                        <form id="searchForm" class="flex items-center bg-white rounded-lg shadow px-2 py-1 mr-2" onsubmit="return false;">
+                            <input id="searchInput" type="text" placeholder="Search location..." class="bg-transparent focus:outline-none px-2 py-1 text-blue-800 placeholder-gray-400 w-40 md:w-56" />
+                            <button type="submit" class="text-blue-600 hover:text-blue-800 px-2 py-1">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
+                        <button id="currentLocation" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-blue-600 font-semibold shadow hover:bg-blue-50 transition">
                             <i class="fas fa-location-arrow"></i> Use My Location
                         </button>
-                        <a href="{{ route('map.favorites') }}" class="btn btn-warning me-2">
+                        <a href="{{ route('map.favorites') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-400 text-white font-semibold shadow hover:bg-yellow-500 transition">
                             <i class="fas fa-star"></i> My Favorites
-                        </a>
-                        <a href="https://openchargemap.org" target="_blank" class="btn btn-primary">
-                            <i class="fas fa-external-link-alt"></i> View on OpenChargeMap
                         </a>
                     </div>
                 </div>
-                <div class="card-body p-0">
-                    <div id="map" style="width: 100%; height: 700px;"></div>
-                </div>
-                <div class="card-footer d-flex justify-content-between align-items-center">
-                    <p class="text-muted mb-0">
-                        <small>
-                            Map data provided by <a href="https://openchargemap.org" target="_blank">OpenChargeMap</a>
-                        </small>
-                    </p>
-                    <div id="status-message"></div>
-                </div>
+            </div>
+            
+            <div class="p-0">
+                <div id="map" class="w-full" style="height:calc(100vh - 180px);"></div>
+            </div>
+            
+            <div class="p-4 bg-white border-t border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <p class="text-sm text-gray-500">
+                    Map data provided by <a href="https://openchargemap.org" target="_blank" class="text-blue-600 hover:text-blue-800">OpenChargeMap</a>
+                </p>
+                <div id="status-message" class="text-sm font-medium"></div>
             </div>
         </div>
     </div>
@@ -40,6 +45,8 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -51,7 +58,7 @@
     function showStatus(message, isError = false) {
         const statusDiv = document.getElementById('status-message');
         statusDiv.innerHTML = message;
-        statusDiv.className = isError ? 'text-danger' : 'text-success';
+        statusDiv.className = isError ? 'text-red-600' : 'text-green-600';
         console.log(isError ? 'Error:' : 'Status:', message);
     }
 
@@ -76,74 +83,76 @@
             console.log('Popup for station:', station.ID, station.AddressInfo?.Title);
             const connections = station.Connections || [];
             const connectionsList = connections.map(conn => `
-                <div class="connection-item mb-2">
-                    <span class="badge ${conn.StatusType?.IsOperational ? 'bg-success' : 'bg-danger'}">
+                <div class="flex flex-col md:flex-row md:items-center gap-2 mb-2">
+                    <span class="inline-block px-2 py-1 rounded text-xs font-semibold ${conn.StatusType?.IsOperational ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
                         ${conn.ConnectionType?.Title || 'Unknown'} (${conn.PowerKW ? conn.PowerKW + ' kW' : 'N/A'})
                     </span>
-                    <br>
-                    <small>Status: ${conn.StatusType?.Title || 'Unknown'}</small>
+                    <span class="text-xs text-gray-500">${conn.StatusType?.Title || 'Unknown'}</span>
                 </div>
             `).join('');
 
-            const isFavorite = favorites.includes(station.ID);
+            const isFavorite = favorites.some(fav => String(fav.ID) === String(station.ID));
             
             return `
-                <div class="station-popup">
-                    <h5 class="mb-3">
-                        <strong>${station.AddressInfo.Title}</strong>
-                        <button onclick="toggleFavorite(${station.ID})" class="btn btn-sm float-end ${isFavorite ? 'btn-warning' : 'btn-outline-warning'}">
+                <div class="station-popup p-4 min-w-[300px] max-w-[350px]">
+                    <div class="flex items-center justify-between mb-4">
+                        <h5 class="text-xl font-bold text-blue-800 leading-tight">${station.AddressInfo.Title}</h5>
+                        <button onclick="toggleFavorite(${station.ID})" 
+                                class="p-2 rounded-full ${isFavorite ? 'bg-yellow-400 text-white' : 'bg-gray-100 text-gray-400'} hover:bg-yellow-400 hover:text-white transition">
                             <i class="fas fa-star"></i>
                         </button>
-                    </h5>
-                    
-                    <div class="location-details mb-3">
-                        <strong>Location:</strong><br>
-                        ${station.AddressInfo.AddressLine1 || ''}<br>
-                        ${station.AddressInfo.Town || ''}, 
-                        ${station.AddressInfo.StateOrProvince || ''}<br>
-                        ${station.AddressInfo.Country?.Title || ''}<br>
-                        <small class="text-muted">Lat/Long: ${station.AddressInfo.Latitude}, ${station.AddressInfo.Longitude}</small>
                     </div>
-
-                    <div class="equipment-details mb-3">
-                        <strong>Equipment Details:</strong><br>
-                        Number of Points: ${connections.length}<br>
-                        ${connectionsList}
-                    </div>
-
-                    <div class="usage-details mb-3">
-                        <strong>Usage Information:</strong><br>
-                        Status: <span class="badge bg-${station.StatusType?.IsOperational ? 'success' : 'danger'}">
-                            ${station.StatusType?.Title || 'Unknown'}
-                        </span><br>
-                        ${station.UsageType ? `Usage Type: ${station.UsageType.Title}<br>` : ''}
-                        ${station.UsageCost ? `Cost: ${station.UsageCost}<br>` : ''}
-                    </div>
-
-                    <div class="operator-details mb-3">
-                        <strong>Network/Operator:</strong><br>
-                        ${station.OperatorInfo?.Title || 'Unknown'}<br>
-                        ${station.OperatorInfo?.WebsiteURL ? 
-                            `<a href="${station.OperatorInfo.WebsiteURL}" target="_blank">Visit Website</a>` : 
-                            ''}
-                    </div>
-
-                    <div class="action-buttons">
-                        <button onclick="getDirections(${station.AddressInfo.Latitude}, ${station.AddressInfo.Longitude})" 
-                                class="btn btn-sm btn-primary">
-                            <i class="fas fa-directions"></i> Get Directions
-                        </button>
-                        <a href="https://openchargemap.org/site/poi/details/${station.ID}" 
-                           target="_blank" 
-                           class="btn btn-sm btn-info">
-                            <i class="fas fa-info-circle"></i> More Details
-                        </a>
+                    <div class="space-y-5">
+                        <div class="location-details">
+                            <div class="font-semibold text-gray-700 mb-1">Location</div>
+                            <div class="text-gray-700 text-sm leading-tight mb-1">
+                                ${station.AddressInfo.AddressLine1 || ''}<br>
+                                ${station.AddressInfo.Town || ''}${station.AddressInfo.Town ? ',' : ''} ${station.AddressInfo.StateOrProvince || ''}<br>
+                                ${station.AddressInfo.Country?.Title || ''}
+                            </div>
+                            <div class="text-xs text-gray-500 mb-1">
+                                Lat/Long: ${station.AddressInfo.Latitude}, ${station.AddressInfo.Longitude}
+                            </div>
+                        </div>
+                        <div class="equipment-details">
+                            <div class="font-semibold text-gray-700 mb-1">Equipment Details</div>
+                            <div class="text-sm text-gray-700 mb-1">Number of Points: ${connections.length}</div>
+                            <div class="flex flex-col gap-1">${connectionsList}</div>
+                        </div>
+                        <div class="usage-details">
+                            <div class="font-semibold text-gray-700 mb-1">Usage Information</div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="inline-block px-2 py-1 rounded text-xs font-semibold bg-${station.StatusType?.IsOperational ? 'green' : 'red'}-100 text-${station.StatusType?.IsOperational ? 'green' : 'red'}-700">
+                                    ${station.StatusType?.Title || 'Unknown'}
+                                </span>
+                            </div>
+                            ${station.UsageType ? `<div class='text-sm text-gray-700 mb-1'>Usage Type: ${station.UsageType.Title}</div>` : ''}
+                            ${station.UsageCost ? `<div class='text-sm text-gray-700 mb-1'>Cost: ${station.UsageCost}</div>` : ''}
+                        </div>
+                        <div class="operator-details">
+                            <div class="font-semibold text-gray-700 mb-1">Network/Operator</div>
+                            <div class="text-sm text-gray-700 mb-1">${station.OperatorInfo?.Title || 'Unknown'}</div>
+                            ${station.OperatorInfo?.WebsiteURL ? 
+                                `<a href="${station.OperatorInfo.WebsiteURL}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm underline">Visit Website</a>` : 
+                                ''}
+                        </div>
+                        <div class="flex gap-2 pt-2">
+                            <button onclick="getDirections(${station.AddressInfo.Latitude}, ${station.AddressInfo.Longitude})" 
+                                    class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition">
+                                <i class="fas fa-directions"></i> Get Directions
+                            </button>
+                            <a href="https://openchargemap.org/site/poi/details/${station.ID}" 
+                               target="_blank" 
+                               class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-blue-400 text-blue-700 font-semibold hover:bg-blue-50 transition">
+                                <i class="fas fa-info-circle"></i> More Details
+                            </a>
+                        </div>
                     </div>
                 </div>
             `;
         } catch (error) {
             console.error('Error creating popup:', error);
-            return `<div class="error">Error loading station details</div>`;
+            return `<div class="p-4 text-red-600">Error loading station details</div>`;
         }
     }
 
@@ -193,9 +202,10 @@
 
     // Function to get directions using Google Maps
     function getDirections(destLat, destLng) {
-        // Default: Telkom University Bandung
-        const defaultOrigin = { lat: -6.973265, lng: 107.630539 };
-        const origin = currentUserLocation ? `${currentUserLocation.lat},${currentUserLocation.lng}` : `${defaultOrigin.lat},${defaultOrigin.lng}`;
+        // Koordinat Telkom University Bandung
+        const telkomUnivLat = -6.973265;
+        const telkomUnivLng = 107.630539;
+        const origin = `${telkomUnivLat},${telkomUnivLng}`;
         const destination = `${destLat},${destLng}`;
         const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
         window.open(googleMapsUrl, '_blank');
@@ -275,41 +285,43 @@
         loadChargingStations(lat, lng);
     });
 
+    // Search location feature
+    document.getElementById('searchForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const query = document.getElementById('searchInput').value.trim();
+        if (!query) return;
+        showStatus('Searching location...');
+        try {
+            // Nominatim OpenStreetMap Geocoding API
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data && data.length > 0) {
+                const lat = parseFloat(data[0].lat);
+                const lng = parseFloat(data[0].lon);
+                map.setView([lat, lng], 15, { animate: true });
+                showStatus(`Found location: ${data[0].display_name}`);
+                loadChargingStations(lat, lng);
+            } else {
+                showStatus('Location not found', true);
+            }
+        } catch (err) {
+            showStatus('Error searching location', true);
+        }
+    });
+
     // Load initial data for Jakarta
     loadChargingStations(-6.200000, 106.816666);
 </script>
 
 <style>
-    .station-popup {
-        min-width: 300px;
-        max-width: 350px;
+    .station-popup .leaflet-popup-content-wrapper {
+        padding: 0;
+        border-radius: 0.5rem;
     }
-    .station-popup .badge {
-        margin-right: 5px;
-        margin-bottom: 5px;
-    }
-    .station-popup .action-buttons {
-        display: flex;
-        gap: 10px;
-        justify-content: space-between;
-    }
-    .connection-item {
-        padding: 5px 0;
-    }
-    .btn-sm {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
-        line-height: 1.5;
-        border-radius: 0.2rem;
-    }
-    #status-message {
-        font-weight: bold;
-    }
-    .text-danger {
-        color: #dc3545;
-    }
-    .text-success {
-        color: #28a745;
+    
+    .station-popup .leaflet-popup-tip {
+        background: white;
     }
 </style>
 @endsection

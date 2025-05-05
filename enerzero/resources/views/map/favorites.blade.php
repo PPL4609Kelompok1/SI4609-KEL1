@@ -2,15 +2,15 @@
 @section('title', 'My Favorites - Enerzero')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-8">
-    <div class="max-w-5xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-blue-900 tracking-tight">My Favorite Charging Stations</h1>
-            <a href="{{ route('map.index') }}" class="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition">
+<div class="min-h-screen bg-green-100 py-10 px-2 md:px-0 flex items-center justify-center">
+    <div class="w-full max-w-none bg-white/80 rounded-3xl shadow-2xl p-0 backdrop-blur-md">
+        <div class="rounded-t-3xl bg-gradient-to-r from-blue-600 to-blue-400 px-8 py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow-lg mb-10">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight drop-shadow">My Favorite Charging Stations</h1>
+            <a href="{{ route('map.index') }}" class="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white text-blue-700 font-bold shadow hover:bg-blue-50 transition">
                 <i class="fas fa-map-marked-alt"></i> Back to Map
             </a>
         </div>
-        <div id="favorites-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div id="favorites-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fadein mt-4 w-full">
             <!-- Favorites will be loaded here -->
         </div>
     </div>
@@ -125,28 +125,24 @@
     }
 
     function getDirections(destLat, destLng) {
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const origin = `${position.coords.latitude},${position.coords.longitude}`;
-                    const destination = `${destLat},${destLng}`;
-                    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
-                    window.open(googleMapsUrl, '_blank');
-                },
-                (error) => {
-                    alert('Please enable location services to get directions');
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                }
-            );
-        } else {
-            alert('Geolocation is not supported by your browser');
-        }
+        // Telkom University Bandung coordinates
+        const telkomUnivLat = -6.9736;
+        const telkomUnivLng = 107.6304;
+        
+        const origin = `${telkomUnivLat},${telkomUnivLng}`;
+        const destination = `${destLat},${destLng}`;
+        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
+        window.open(googleMapsUrl, '_blank');
     }
 </script>
+
+<style>
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-fadein { animation: fadein 0.7s cubic-bezier(.4,2,.6,1) both; }
+</style>
 
 <!-- Tidak perlu style tambahan, semua pakai Tailwind -->
 @endsection 
