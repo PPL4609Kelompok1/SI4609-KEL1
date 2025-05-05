@@ -5,5 +5,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MapController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-Route::resource('maps', MapController::class);
-Route::get('maps/stations/{id}', [MapController::class, 'getStationDetails'])->name('maps.stations.details');
+
+// Map routes
+Route::get('/map', [MapController::class, 'index'])->name('map.index');
+Route::get('/map/favorites', [MapController::class, 'favorites'])->name('map.favorites');
+
+// API routes
+Route::get('/api/charging-stations', [MapController::class, 'getChargingStations']);
+Route::get('/api/charging-station/{id}', [MapController::class, 'getChargingStation']);
+
