@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Forum;
-
+use App\Models\Product;
 
 class DashboardController extends Controller
 {
+
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+    
     public function index()
     {
         // Dummy Data, you can replace this with DB queries
@@ -20,15 +26,18 @@ class DashboardController extends Controller
             ['label' => 'Really good energy usage', 'color' => 'rgba(44, 132, 52, 0.7)'],
         ];
 
-        $topForums = Forum::withCount('likes')->orderBy('likes_count', 'desc')->take(3)->get();
-        return view('dashboard', compact('topForums'));
+        $forums = Forum::withCount(['replies', 'likes'])
+        ->latest()
+        ->take(5)
+        ->get();
 
-        $recommendation = [
-            'image' => '/images/lyumo-us.jpg', // you need to add this image in /public/images/
-            'title' => 'LYUMO US 24KW Home Electricity Energy Factor Saver Electronic',
-            'price' => 'Rp 250.000,-'
+        $products = Product::all();
+
+        $notification = [
+            'type' => 'warning',
+            'message' => 'Pola konsumsi energi kamu menunjukkan tren yang kurang baik. Coba evaluasi penggunaan listrik harianmu.'
         ];
 
-        return view('dashboard', compact('username', 'simulationSummary', 'forumPosts', 'recommendation'));
+        return view('dashboard', compact('username', 'simulationSummary', 'forums', 'products', 'notification'));
     }
 }

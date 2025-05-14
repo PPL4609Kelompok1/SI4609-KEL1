@@ -68,8 +68,9 @@ class ForumController extends Controller
         $forum = Forum::findOrFail($id);
         // cek user access
         if ($forum->username !== Auth::user()->username) {
-            abort(403, 'Unauthorized action.');
+            return back()->with('error', 'Kamu tidak memiliki izin untuk mengakses aksi ini.');
         }
+        
         return view('forum.edit', compact('forum'));
     }
 
@@ -79,8 +80,9 @@ class ForumController extends Controller
         $forum = Forum::findOrFail($id);
         // cek user access
         if ($forum->username !== Auth::user()->username) {
-            abort(403, 'Unauthorized action.');
+            return back()->with('error', 'Kamu tidak memiliki izin untuk mengakses aksi ini.');
         }
+        
 
         $request->validate([
             'title' => 'required|string|max:255',
@@ -96,8 +98,9 @@ class ForumController extends Controller
         $forum = Forum::findOrFail($id);
         // cek user access
         if ($forum->username !== Auth::user()->username) {
-            abort(403, 'Unauthorized action.');
+            return back()->with('error', 'Kamu tidak memiliki izin untuk mengakses aksi ini.');
         }
+        
         $forum->delete();
 
         return redirect()->route('forum', $forum->id)->with('success', 'Forum berhasil dihapus!');
@@ -141,8 +144,8 @@ class ForumController extends Controller
         } else {
             ForumLike::create([
                 'forum_id' => $id,
-                'username' => $username,
-                // $username = Auth::user()->username,
+                // 'username' => $username,
+                $username = Auth::user()->username,
             ]);
         }
 

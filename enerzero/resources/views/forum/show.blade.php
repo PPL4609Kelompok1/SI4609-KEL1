@@ -3,6 +3,13 @@
 
 <!-- Main Content -->
 @section('content')
+    @if (session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong class="font-bold">Oops!</strong>
+            <span class="block sm:inline">{{ session('error') }}</span>
+        </div>
+    @endif
+
     <!-- In show.blade.php, replace the existing edit/delete buttons section -->
     <div class="w-90/100 p-4 bg-white rounded-lg shadow mb-4">
 
@@ -24,7 +31,7 @@
                 <h1 class="text-xl font-bold text-black-800">{{ $forum->title }}</h1>
             </div>
 
-            @if ($forum->username === 'Mas Agus Indihome')
+            @if ($forum->username)
                 <div class="relative" x-data="{ open: false }">
 
                     <!-- Three dots button -->
