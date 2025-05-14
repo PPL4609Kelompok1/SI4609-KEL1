@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Forum;
+use App\Models\Product;
 
 class DashboardController extends Controller
 {
@@ -18,33 +20,18 @@ class DashboardController extends Controller
             ['label' => 'Really good energy usage', 'color' => 'rgba(44, 132, 52, 0.7)'],
         ];
 
-        $forumPosts = [
-            [
-                'title' => 'Info buat hemat daya!',
-                'content' => 'Gimana cara biar hemat daya nih, lagi banyak pemakaian, apa ada caranya? solanya laagi ada acara cuman takut boncos juga!',
-                'icon' => 'flash',
-                'time' => '1 day ago'
-            ],
-            [
-                'title' => '3 Tips and trick buat usage daya yang oke',
-                'content' => 'Nih 3 tips dari gw yang sering pake daya energi lumayan banyak, tetapi bisa tetep oke...',
-                'icon' => 'lightbulb',
-                'time' => '10 days ago'
-            ],
-            [
-                'title' => 'Hemat energi pangkalan oke',
-                'content' => 'Jadi tolong ges gimana menurut kalian tentang penghematan energi...',
-                'icon' => 'flash',
-                'time' => ''
-            ]
+        $forums = Forum::withCount(['replies', 'likes'])
+        ->latest()
+        ->take(5)
+        ->get();
+
+        $products = Product::all();
+
+        $notification = [
+            'type' => 'warning',
+            'message' => 'Pola konsumsi energi kamu menunjukkan tren yang kurang baik. Coba evaluasi penggunaan listrik harianmu.'
         ];
 
-        $recommendation = [
-            'image' => '/images/lyumo-us.jpg', // you need to add this image in /public/images/
-            'title' => 'LYUMO US 24KW Home Electricity Energy Factor Saver Electronic',
-            'price' => 'Rp 250.000,-'
-        ];
-
-        return view('dashboard', compact('username', 'simulationSummary', 'forumPosts', 'recommendation'));
+        return view('dashboard', compact('username', 'simulationSummary', 'forums', 'products', 'notification'));
     }
 }
