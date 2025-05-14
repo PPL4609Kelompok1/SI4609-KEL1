@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-png" href="{{ asset('Logo Enerzero.png') }}" />
     <title>Login | Enerzero</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f0fff4;
-            font-family: 'Roboto', sans-serif;
+            height: 98vh;
+            background-image: url("{{ asset('BackGround.png') }}");
+            background-size: cover;
+            font-family: 'Poppins', sans-serif;
         }
         .container {
             display: flex;
@@ -32,10 +34,12 @@
             justify-content: center;
             align-items: center;
             background-color: #e0ffe0;
-            border-radius: 15px 0 0 15px;
+            border-radius: 0 15px 15px 0;
         }
         .right {
-            border-left: 1px solid #ddd;
+            border-left: none;
+            border-right: 1px solid #ddd;
+            
         }
         h1 {
             margin-bottom: 10px;
@@ -68,34 +72,54 @@
             margin-top: 20px;
             text-align: center;
         }
+        .image-normal {
+            transition: transform 0.5s ease;
+        }
+        .slide-left {
+            transform: translateX(-100%);
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="left">
-        <h1>Save Energy, Save the world!</h1>
-        <img src="path_to_image" alt="Solar Panel" style="width: 100%;">
-    </div>
     <div class="right">
         <h1>Welcome Back!</h1>
         <p>Small energy changes, massive global impact. With Enerzero, transforming how the world uses power!</p>
         <form action="{{ route('login') }}" method="POST">
             @csrf
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-            
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-
-            <a href="#">Forgot Password?</a>
+            <div>
+                <label for="username">Username</label>
+                <input type="username" class="form-control" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
             <button type="submit">LOGIN</button>
         </form>
         <div class="footer">
-            <p>Don’t have an account yet? <a href="{{ route('register') }}">Register</a></p>
+            <p>Don’t have an account yet? <a href="{{ route('regist') }}" id="go-register">Register</a></p>
         </div>
     </div>
+    <div id="image-container" class="image-normal left">
+        <img src="{{ asset('Logo icon.png')}}" alt="Solar Panel" style="width: 70%;">
+        <img src="{{ asset('LoginBG.png')}}" alt="Solar Panel" style="width: 100%;">
+        <h1>Save Energy, Save the world!</h1>
+    </div>
 </div>
+<script>
+    const btnRegister = document.getElementById('go-register');
+    const imageContainer = document.getElementById('image-container');
+
+    btnRegister.addEventListener('click', function(event) {
+        event.preventDefault();
+        imageContainer.classList.add('slide-left');
+        setTimeout(() => {
+            window.location.href = "{{ route('regist') }}";
+        }, 500); // waktu animasi 0.5 detik
+    });
+</script>
 
 </body>
 </html>
