@@ -49,7 +49,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 {{ request()->is('calculator') ? 'sidebar-active' : '' }} hover:bg-green-200">
+                    <a href="/calculator" class="flex items-center gap-3 px-6 py-3 {{ request()->is('calculator') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-calculator"></i>
                         <span>Calculator</span>
                     </a>

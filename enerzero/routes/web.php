@@ -10,6 +10,7 @@ use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\EnergyUsageReportController;
+use App\Http\Controllers\CalculatorController;
 
 // Rute untuk pengguna yang belum login (guest)
 Route::middleware('guest')->group(function () {
@@ -64,4 +65,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/energy/{id}/edit', [EnergyUsageReportController::class, 'edit'])->name('energy.edit');
     Route::put('/energy/{id}', [EnergyUsageReportController::class, 'update'])->name('energy.update');
     Route::delete('/energy/{id}', [EnergyUsageReportController::class, 'destroy'])->name('energy.destroy');
+
+    Route::get('/calculator', [CalculatorController::class, 'index'])->name('calculator.index');
+    Route::post('/calculator', [CalculatorController::class, 'store'])->name('calculator.store');
 });
