@@ -74,7 +74,7 @@
                 @endif
 
                 <!-- Name -->
-                <div class="flex justify-center">{{ $entry['name'] === Auth::user()->name ? Auth::user()->name : $entry['name'] }}</div>
+                <div class="flex justify-center">{{ $entry['name'] === Auth::user()->name ? auth()->user()->username : $entry['name'] }}</div>
 
                 <!-- Score -->
                 <div class="flex justify-center">{{ $entry['score'] }}</div>
