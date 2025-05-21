@@ -64,4 +64,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/energy/{id}/edit', [EnergyUsageReportController::class, 'edit'])->name('energy.edit');
     Route::put('/energy/{id}', [EnergyUsageReportController::class, 'update'])->name('energy.update');
     Route::delete('/energy/{id}', [EnergyUsageReportController::class, 'destroy'])->name('energy.destroy');
+
+    Route::get('/mission', function () {return view('mission.mission');})->name('challenge');
 });

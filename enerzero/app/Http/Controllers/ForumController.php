@@ -132,9 +132,10 @@ class ForumController extends Controller
     // like function
     public function like($id)
     {
+        $user = Auth::user();
+        
         $forum = Forum::findOrFail($id);
-        $username = 'Mas Agus Indihome'; 
-        // Ganti ini ke auth user kalau udah pakai login
+        $username = $user->username; // Ganti ini ke auth user kalau udah pakai login
 
         // Cek apakah user sudah like
         $existingLike = ForumLike::where('forum_id', $id)->where('username', $username)->first();
@@ -144,8 +145,7 @@ class ForumController extends Controller
         } else {
             ForumLike::create([
                 'forum_id' => $id,
-                // 'username' => $username,
-                $username = Auth::user()->username,
+                'username' => $username,
             ]);
         }
 

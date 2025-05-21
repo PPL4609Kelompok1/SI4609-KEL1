@@ -1,4 +1,3 @@
-
 <?php $__env->startSection('title', 'Enerzero | Forum'); ?>
 
 <!-- Main Content -->
