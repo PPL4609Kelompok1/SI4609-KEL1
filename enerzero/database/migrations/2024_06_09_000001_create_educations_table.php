@@ -16,10 +16,18 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('education_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('education_id')->constrained('educations')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     public function down()
     {
+        Schema::dropIfExists('education_user');
         Schema::dropIfExists('educations');
     }
 }; 

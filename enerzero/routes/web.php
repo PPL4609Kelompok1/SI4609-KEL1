@@ -16,5 +16,7 @@ Route::get('/api/charging-stations', [MapController::class, 'getChargingStations
 Route::get('/api/charging-station/{id}', [MapController::class, 'getChargingStation']);
 
 // Education routes
+Route::get('/education/saved', [EducationController::class, 'saved'])->name('education.saved');
+Route::post('/api/education/{id}/toggle-save', [EducationController::class, 'toggleSave'])->name('education.toggle-save');
 Route::resource('education', EducationController::class);
 

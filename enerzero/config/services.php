@@ -50,4 +50,12 @@ return [
         'key' => env('OPENCHARGEMAP_API_KEY', ''),
     ],
 
+    'newsapi' => [
+        'key' => env('NEWS_API_KEY'),
+    ],
+
+    'youtube' => [
+        'key' => env('YOUTUBE_API_KEY'),
+    ],
+
 ];
