@@ -10,13 +10,8 @@ use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\EnergyUsageReportController;
-use App\Http\Controllers\UserProfileController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\EnergySimulationController;
+use App\Http\Controllers\CalculatorController;
+use App\Http\Controllers\EnergySimulationController; # Menambahkan controller simulasi hemat energi
 
 // Rute untuk pengguna yang belum login (guest)
 Route::middleware('guest')->group(function () {
@@ -55,25 +50,25 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/produk/{product}', [ProductController::class, 'show'])->name('products.show');
 
     // Review routes
-    Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
-    Route::get('/reviews/{review}/edit', [ProductReviewController::class, 'edit'])->name('reviews.edit');
-    Route::put('/reviews/{review}', [ProductReviewController::class, 'update'])->name('reviews.update');
-    Route::delete('/reviews/{review}', [ProductReviewController::class, 'destroy'])->name('reviews.destroy');
+    Route::post('/products/{product}/review', [ReviewController::class, 'store'])->name('review.store');
+    Route::get('/review/{review}', [ReviewController::class, 'show'])->name('review.show');
+    Route::put('/review/{review}', [ReviewController::class, 'update'])->name('review.update');
+    Route::delete('/review/{review}', [ReviewController::class, 'destroy'])->name('review.destroy');
+    Route::resource('products.reviews', ReviewController::class)->shallow();
 
-    Route::get('/energy-report', [EnergyUsageReportController::class, 'index'])->name('energy.index');
+    Route::resource('reviews', ReviewController::class)->except(['index', 'show']);
+
+    Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
+
+    Route::get('/energy-usage', [EnergyUsageReportController::class, 'index'])->name('energy.index');
     Route::get('/energy/create', [EnergyUsageReportController::class, 'create'])->name('energy.create');
     Route::post('/energy', [EnergyUsageReportController::class, 'store'])->name('energy.store');
     Route::get('/energy/{id}/edit', [EnergyUsageReportController::class, 'edit'])->name('energy.edit');
     Route::put('/energy/{id}', [EnergyUsageReportController::class, 'update'])->name('energy.update');
     Route::delete('/energy/{id}', [EnergyUsageReportController::class, 'destroy'])->name('energy.destroy');
 
-    Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
-    Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
-
-    // Checkout Process
-    Route::get('/orders/{order}/payment', [PaymentController::class, 'show'])->name('payment.show');
-    Route::post('/orders/{order}/payment', [PaymentController::class, 'process'])->name('payment.process');
-    Route::get('/orders/{order}/confirmation', [OrderController::class, 'confirmation'])->name('order.confirmation');
+    Route::get('/calculator', [CalculatorController::class, 'index'])->name('calculator.index');
+    Route::post('/calculator', [CalculatorController::class, 'store'])->name('calculator.store');
 
     // Energy Saving Simulation Routes
     Route::get('/simulasi-energi', [EnergySimulationController::class, 'index'])->name('energy.simulation.index');
@@ -82,6 +77,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/simulasi-energi/riwayat', [EnergySimulationController::class, 'history'])->name('energy.simulation.history');
     Route::get('/simulasi-energi/riwayat/{simulation}', [EnergySimulationController::class, 'showDetails'])->name('energy.simulation.showDetails');
 });
-
-// Admin routes
-// ... existing code ...
