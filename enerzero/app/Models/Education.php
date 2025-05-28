@@ -15,16 +15,12 @@ class Education extends Model
         'title',
         'content',
         'category',
-        'image'
+        'image_url',
+        'slug'
     ];
 
-    public function users()
+    public function getRouteKeyName()
     {
-        return $this->belongsToMany(User::class, 'education_user');
+        return 'slug';
     }
-
-    public function isSavedByUser($userId)
-    {
-        return $this->users()->where('user_id', $userId)->exists();
-    }
-} 
+}

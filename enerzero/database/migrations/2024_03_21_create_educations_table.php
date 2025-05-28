@@ -13,21 +13,14 @@ return new class extends Migration
             $table->string('title');
             $table->text('content');
             $table->string('category');
-            $table->string('image')->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('education_user', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('education_id')->constrained('educations')->onDelete('cascade');
+            $table->string('image_url')->nullable();
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('education_user');
         Schema::dropIfExists('educations');
     }
 }; 
