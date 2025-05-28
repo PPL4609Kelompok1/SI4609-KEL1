@@ -1,6 +1,9 @@
+<<<<<<< HEAD
+=======
 SI4609 - Kelompok 1
 
 =======
+>>>>>>> 58dd2dbf9809beebbceee0b6005b42711a789cf6
 SI4609-KELOMPOK 1
 Muhammad Shafwan Hawari Yunas - 1202220224
 Dhifulloh Dhiya Ulhaq - 1202220139

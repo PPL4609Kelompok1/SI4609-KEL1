@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
 
     Route::get('/energy-usage', [EnergyUsageReportController::class, 'index'])->name('energy.index');
+
     Route::get('/energy/create', [EnergyUsageReportController::class, 'create'])->name('energy.create');
     Route::post('/energy', [EnergyUsageReportController::class, 'store'])->name('energy.store');
     Route::get('/energy/{id}/edit', [EnergyUsageReportController::class, 'edit'])->name('energy.edit');

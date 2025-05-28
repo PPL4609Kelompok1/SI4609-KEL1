@@ -155,6 +155,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>document.addEventListener('DOMContentLoaded', function() {
+
     const button = document.getElementById('settings-button');
     const menu = document.getElementById('dropdown-menu');
 
@@ -198,6 +199,5 @@
     }, 3000);
 });
 </script>
-
 
 @endsection
