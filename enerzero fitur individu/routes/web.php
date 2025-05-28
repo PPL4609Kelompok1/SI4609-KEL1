@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnergyUsageReportController;
-use App\Http\Livewire\ProfileSettings;
+
 
 
 
@@ -16,6 +16,6 @@ Route::post('/energy', [EnergyUsageReportController::class, 'store'])->name('ene
 Route::get('/energy/{id}/edit', [EnergyUsageReportController::class, 'edit'])->name('energy.edit');
 Route::put('/energy/{id}', [EnergyUsageReportController::class, 'update'])->name('energy.update');
 Route::delete('/energy/{id}', [EnergyUsageReportController::class, 'destroy'])->name('energy.destroy');
-Route::get('/profile', ProfileSettings::class)->name('profile.settings');
+
 
 
