@@ -10,6 +10,7 @@ use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\EnergyUsageReportController;
+use App\Http\Controllers\MissionController;
 
 // Rute untuk pengguna yang belum login (guest)
 Route::middleware('guest')->group(function () {
@@ -28,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/leaderboard/{category?}', [LeaderboardController::class, 'showUserRank'])->name('leaderboard.index');
     Route::resource('maps', MapController::class);
     Route::get('maps/stations/{id}', [MapController::class, 'getStationDetails'])->name('maps.stations.details');
+    
     Route::get('/forum', [ForumController::class, 'index'])->name('forum');
     // Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 
@@ -65,5 +67,5 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/energy/{id}', [EnergyUsageReportController::class, 'update'])->name('energy.update');
     Route::delete('/energy/{id}', [EnergyUsageReportController::class, 'destroy'])->name('energy.destroy');
 
-    Route::get('/mission', function () {return view('mission.mission');})->name('challenge');
+    Route::get('/mission', [MissionController::class, 'index'])->name('mission.index'); 
 });

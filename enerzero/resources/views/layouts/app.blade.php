@@ -62,9 +62,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/energy-report" class="flex items-center gap-3 px-6 py-3 {{ request()->is('simulation') ? 'sidebar-active' : '' }} hover:bg-green-200">
-                        <i class="fas fa-camera"></i>
-                        <span>Simulation</span>
+                    <a href="{{ route('energy.index') }}" class="flex items-center gap-3 px-6 py-3 {{ request()->is('energy.index') ? 'sidebar-active' : '' }} hover:bg-green-200">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Energy Usage Report</span>
                     </a>
                 </li>
                 <li>

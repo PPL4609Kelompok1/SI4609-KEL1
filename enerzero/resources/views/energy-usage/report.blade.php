@@ -4,8 +4,10 @@
 
 @section('content')
 @php
-    $maxUsage = max($monthlyUsage->toArray()) ?: 1;
+    $usageArray = $monthlyUsage->toArray();
+    $maxUsage = !empty($usageArray) ? max($usageArray) : 1;
 @endphp
+
 
 <div class="space-y-6">
     <header class="mb-6 flex items-center justify-between">
