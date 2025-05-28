@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Report;
+use Illuminate\Support\Facades\Auth;
 
 class EnergyUsageReportController extends Controller
 {
     // Show all reports
     public function index()
     {
-        $reports = Report::all();
+        $username = Auth::user()->username;
+        $reports = Report::where('username', $username)->get();
 
         // Ambil 2 data terakhir untuk perbandingan
         $latest = $reports->sortByDesc('id')->take(2);
@@ -21,6 +23,7 @@ class EnergyUsageReportController extends Controller
         $trend = $current >= $previous ? 'increase' : 'decrease';
 
         $comparisonData = [
+            'username' => $username,
             'current_month' => $current,
             'previous_month' => $previous,
             'percentage_change' => $percentageChange,
@@ -42,17 +45,23 @@ class EnergyUsageReportController extends Controller
     }
 
     // Simpan data baru
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $request->validate([
             'month' => 'required|string',
-            'usage' => 'required|integer',
+            'usage' => 'required|numeric|min:0',
         ]);
 
-        Report::create($request->only(['month', 'usage']));
+        $username = Auth::user()->username;
 
-        return redirect()->route('energy.index')->with('success', 'Data added successfully!');
-    }
+        Report::create([
+            'username' => $username,
+            'month' => $request->month,
+            'usage' => $request->usage,
+        ]);
+
+        return redirect()->route('energy.index')->with('success', 'Data berhasil disimpan!');
+    }   
 
     // Edit data
     public function edit($id)

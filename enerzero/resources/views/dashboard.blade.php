@@ -32,6 +32,12 @@
             </button>
             <div class="w-10 h-10 rounded-full bg-gray-300"></div>
             <div id="dropdown-menu" class="absolute right-20 mt-20 w-48 bg-white rounded-md shadow-lg hidden">
+                <form action="#" method="POST">
+                    @csrf
+                    <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" type="submit">
+                        <i class="bi bi-box-arrow-right me-2"></i> Settings
+                    </button>
+                </form>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" type="submit">

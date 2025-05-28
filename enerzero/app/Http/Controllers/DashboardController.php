@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $username = Auth::user()->username;
 
         // Ambil semua report usage
-        $reports = Report::all();
+        $reports = Report::where('username', $username)->get();
 
         // Ambil 2 data terakhir untuk perbandingan
         $latest = $reports->sortByDesc('id')->take(2);

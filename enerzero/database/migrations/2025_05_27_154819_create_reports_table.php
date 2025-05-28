@@ -8,6 +8,7 @@ return new class extends Migration {
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+            $table->string('username');
             $table->string('month');        // ex: January, February
             $table->integer('usage');       // kWh used that month
             $table->timestamps();
