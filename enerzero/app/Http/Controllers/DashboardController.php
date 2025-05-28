@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Forum;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Dummy Data, you can replace this with DB queries
         $username = 'User123';
 
         $simulationSummary = [
@@ -21,17 +21,44 @@ class DashboardController extends Controller
         ];
 
         $forums = Forum::withCount(['replies', 'likes'])
-        ->latest()
-        ->take(5)
-        ->get();
+            ->latest()
+            ->take(5)
+            ->get();
 
         $products = Product::all();
 
-        $notification = [
-            'type' => 'warning',
-            'message' => 'Pola konsumsi energi kamu menunjukkan tren yang kurang baik. Coba evaluasi penggunaan listrik harianmu.'
+        return view('dashboard', compact('username', 'simulationSummary', 'forums', 'products'));
+    }
+
+    public function getNotifications()
+    {
+        $notifications = [
+            [
+                'id' => 1,
+                'data' => ['message' => 'Penggunaan energi kamu melebihi batas normal! Segera lakukan penghematan.'],
+                'read_at' => null,
+                'type' => 'energy_alert'
+            ],
+            [
+                'id' => 2,
+                'data' => ['message' => 'Jangan lupa ikuti misi harian hari ini untuk mendapatkan poin tambahan!'],
+                'read_at' => null,
+                'type' => 'daily_challenge'
+            ],
+            [
+                'id' => 3,
+                'data' => ['message' => 'Artikel baru telah terbit: "Cara Cerdas Menghemat Energi di Rumah". Yuk baca sekarang!'],
+                'read_at' => null,
+                'type' => 'new_article'
+            ],
         ];
 
-        return view('dashboard', compact('username', 'simulationSummary', 'forums', 'products', 'notification'));
+        return response()->json($notifications);
+    }
+
+    public function markAsRead(Request $request)
+    {
+        $id = $request->input('id');
+        return response()->json(['status' => 'success', 'id' => $id]);
     }
 }

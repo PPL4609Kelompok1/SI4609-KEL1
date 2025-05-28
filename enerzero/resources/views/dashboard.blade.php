@@ -6,7 +6,7 @@
 <div class="space-y-6">
 
     <!-- Header -->
-    <header class="mb-6 flex items-center justify-between">
+    <header class="sticky top-0 z-50 mb-6 flex items-center justify-between ">
         <div class="flex items-center gap-2">
             <i class="fas fa-desktop text-2xl text-green-700"></i>
             <h1 class="text-3xl font-bold text-green-900">Dashboard</h1>
@@ -14,19 +14,19 @@
         <div class="flex items-center gap-4 text-gray-600">
             <button title="Notifications" id="notif-button" class="hover:text-green-700 relative">
                 <i class="fas fa-bell fa-lg"></i>
-                @if($notification)
-                    <span class="absolute top-0 right-0 block w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-                    <span class="absolute top-0 right-0 block w-2 h-2 bg-red-500 rounded-full"></span>
-                @endif
+                <span id="notif-badge" class="absolute top-0 right-0 block w-2 h-2 bg-red-500 rounded-full hidden"></span>
             </button>
-            @if($notification)
-            <div id="notif-dropdown" class="absolute right-20 mt-20 w-64 bg-white rounded-md shadow-lg hidden z-50">
-                <div class="p-4 text-sm text-gray-800">
-                    <p class="font-bold mb-2">Notifikasi Penting</p>
-                    <p><i class="fas fa-exclamation-circle text-yellow-500 mr-2"></i>{{ $notification['message'] }}</p>
-                </div>
+        <!-- Dropdown Notifikasi Sticky dan Interaktif -->
+        <div id="notif-dropdown" class="absolute right-0 top-full mt-2 w-72 max-h-80 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden hidden z-50 transition-all duration-300 ease-in-out">
+            <div class="p-4 text-sm text-gray-800 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                <p class="font-bold mb-2 text-green-700">Notifikasi</p>
+                <ul id="notif-list" class="space-y-3 text-sm">
+                    <li class="text-gray-400 text-center">Memuat notifikasi...</li>
+                </ul>
             </div>
-            @endif
+        </div>
+
+
             <button title="Settings" class="hover:text-green-700" id="settings-button">
                 <i class="fas fa-cog fa-lg"></i>
             </button>
@@ -57,10 +57,8 @@
         <article class="col-span-2 bg-white rounded-lg p-6 shadow-md">
             <h2 class="text-green-700 font-semibold text-lg mb-4">SIMULATION DATA SUMMARY</h2>
             <div class="flex gap-6">
-                <!-- Pie Chart and Legend -->
                 <div class="flex-1 flex gap-4">
                     <div class="w-[150px] h-[150px]">
-                        <!-- Placeholder Pie Chart with SVG -->
                         <svg viewBox="0 0 36 36" class="w-full h-full">
                             <circle r="16" cx="18" cy="18" fill="#c6f6d5" />
                             <circle r="16" cx="18" cy="18" fill="#34a853" stroke="#2f855a" stroke-width="5" stroke-dasharray="20 80" stroke-dashoffset="25" transform="rotate(-90 18 18)" />
@@ -84,12 +82,10 @@
                     </ul>
                 </div>
             </div>
-
             <p class="mt-4 text-gray-800 text-sm">
                 Hebat! dari data yang kami dapat, kami mengetahui bahwa kamu peka terhadap energi disekitar kamu.
-                Semoga ini bisa terus berlangsung dan menjadi lebih baik. Kedepannya coba matikan hal...
+                Semoga ini bisa terus berlangsung dan menjadi lebih baik.
             </p>
-
             <button class="mt-4 bg-yellow-400 text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300">
                 See Detail
             </button>
@@ -104,7 +100,7 @@
                     Dari Kesadaran Menuju Tindakan: Edukasi Energi sebagai Pendorong Pembangunan Berkelanjutan
                 </p>
                 <p class="text-gray-800 text-sm my-2">
-                    Edukasi energi mencakup berbagai inisiatif yang ditujukan untuk menumbuhkan kesadaran, pemahaman, dan perilaku yang bertanggung jawab terhadapi...
+                    Edukasi energi mencakup berbagai inisiatif yang ditujukan untuk menumbuhkan kesadaran, pemahaman, dan perilaku yang bertanggung jawab terhadap energi.
                 </p>
                 <button class="mt-2 bg-yellow-400 text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300">
                     Read More
@@ -120,7 +116,6 @@
         <!-- Forum -->
         <article class="md:col-span-3 bg-white rounded-lg p-4 shadow-md overflow-auto max-h-[320px] scrollbar-thin">
             <h3 class="text-green-700 font-semibold text-lg mb-4">FORUM</h3>
-
             <div class="space-y-4">
             @foreach ($forums as $forum)
                 <a href="{{ route('forum.show', $forum->id) }}" class="block hover:shadow-lg transition">
@@ -150,7 +145,7 @@
         <div class="overflow-hidden bg-white rounded-lg p-4 shadow-md">
             <h3 class="text-green-700 font-semibold text-lg mb-4 uppercase">PRODUCTS</h3>
             <div class="flex gap-4 transition-transform duration-700 ease-in-out" id="product-slider">
-                @foreach ($products as $index => $product)
+                @foreach ($products as $product)
                 <div class="w-full flex-shrink-0">
                     <div class="product-slide w-full h-full">
                         <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-40 object-contain mb-2 mx-auto" />
@@ -176,42 +171,79 @@
 document.addEventListener('DOMContentLoaded', function() {
     const button = document.getElementById('settings-button');
     const menu = document.getElementById('dropdown-menu');
-
     button.addEventListener('click', function(event) {
-        event.stopPropagation(); // Supaya klik button tidak dianggap klik diluar
-        menu.classList.toggle('hidden'); // Toggle buka/tutup
+        event.stopPropagation();
+        menu.classList.toggle('hidden');
     });
-
     document.addEventListener('click', function(event) {
-        // Kalau klik di luar button dan menu, tutup menu
         if (!menu.contains(event.target) && !button.contains(event.target)) {
             menu.classList.add('hidden');
         }
     });
-    
+
     const notifButton = document.getElementById('notif-button');
     const notifDropdown = document.getElementById('notif-dropdown');
+    const notifList = document.getElementById('notif-list');
+    const notifBadge = document.getElementById('notif-badge');
 
     notifButton?.addEventListener('click', function(event) {
         event.stopPropagation();
         notifDropdown?.classList.toggle('hidden');
+        loadNotifications();
     });
 
     document.addEventListener('click', function(event) {
-        if (!notifDropdown?.contains(event.target) && !notifButton?.contains(event.target)) {
-            notifDropdown?.classList.add('hidden');
+        if (!notifDropdown.contains(event.target) && !notifButton.contains(event.target)) {
+            notifDropdown.classList.add('hidden');
         }
     });
+
+    notifList?.addEventListener('click', function(e) {
+        if (e.target.tagName === 'BUTTON') {
+            const id = e.target.getAttribute('data-id');
+            fetch('/notifications/read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ id })
+            }).then(() => {
+                e.target.parentElement.remove();
+            });
+        }
+    });
+
+    function loadNotifications() {
+        fetch('/notifications')
+            .then(res => res.json())
+            .then(data => {
+                notifList.innerHTML = '';
+                if (data.length === 0) {
+                    notifList.innerHTML = '<li class="text-gray-400 text-center">Tidak ada notifikasi baru</li>';
+                    notifBadge.classList.add('hidden');
+                } else {
+                    notifBadge.classList.remove('hidden');
+                    data.forEach(notif => {
+                        const li = document.createElement('li');
+                        li.className = 'flex justify-between items-center gap-2 border-b pb-2';
+                        li.innerHTML = `
+                            <span>${notif.data.message}</span>
+                            <button data-id="${notif.id}" class="text-xs text-blue-600 hover:underline">Tandai dibaca</button>
+                        `;
+                        notifList.appendChild(li);
+                    });
+                }
+            });
+    }
 
     const slider = document.getElementById('product-slider');
     const totalSlides = slider.children.length;
     let current = 0;
-
     function showSlide(index) {
         const percentage = -(index * 100);
         slider.style.transform = `translateX(${percentage}%)`;
     }
-
     setInterval(() => {
         current = (current + 1) % totalSlides;
         showSlide(current);
