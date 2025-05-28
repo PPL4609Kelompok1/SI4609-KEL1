@@ -5,15 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Review extends Model
+class Device extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_devices';
+
     protected $fillable = [
         'user_id',
-        'product_id',
-        'rating',
-        'comment'
+        'name',
+        'wattage',
+        'category'
     ];
 
     public function user()
@@ -21,8 +23,9 @@ class Review extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function product()
+    // Scope untuk mendapatkan perangkat milik user tertentu
+    public function scopeUserDevices($query, $userId)
     {
-        return $this->belongsTo(Product::class);
+        return $query->where('user_id', $userId);
     }
-}
+} 

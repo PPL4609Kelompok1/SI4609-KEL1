@@ -3,21 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Forum;
 use App\Models\Product;
+use App\Models\Report;
+
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Dummy Data, you can replace this with DB queries
-        $username = 'User123';
+        $username = Auth::user()->username;
 
-        $simulationSummary = [
-            ['label' => 'Good energy usage', 'color' => 'rgba(173, 237, 193, 0.7)'],
-            ['label' => 'Bad energy usage', 'color' => 'rgba(141, 210, 152, 0.7)'],
-            ['label' => 'Really bad energy usage', 'color' => 'rgba(230, 230, 230, 0.7)'],
-            ['label' => 'Really good energy usage', 'color' => 'rgba(44, 132, 52, 0.7)'],
+        // Ambil semua report usage
+        $reports = Report::all();
+
+        // Ambil 2 data terakhir untuk perbandingan
+        $latest = $reports->sortByDesc('id')->take(2);
+        $current = $latest->first()->usage ?? 0;
+        $previous = $latest->skip(1)->first()->usage ?? 0;
+
+        $percentageChange = $previous ? number_format((($current - $previous) / $previous) * 100, 2) : 0;
+        $trend = $current >= $previous ? 'increase' : 'decrease';
+        
+        $comparisonData = [
+            'current_month' => $current,
+            'previous_month' => $previous,
+            'percentage_change' => $percentageChange,
+            'trend' => $trend
         ];
 
         $forums = Forum::withCount(['replies', 'likes'])
@@ -27,11 +40,13 @@ class DashboardController extends Controller
 
         $products = Product::all();
 
+
         $notification = [
             'type' => 'warning',
             'message' => 'Pola konsumsi energi kamu menunjukkan tren yang kurang baik. Coba evaluasi penggunaan listrik harianmu.'
         ];
 
-        return view('dashboard', compact('username', 'simulationSummary', 'forums', 'products', 'notification'));
+        return view('dashboard', compact('username', 'reports', 'comparisonData', 'forums', 'products', 'notification'));
+
     }
 }
