@@ -12,6 +12,7 @@ use App\Http\Controllers\MapController;
 use App\Http\Controllers\EnergyUsageReportController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\EnergySimulationController; # Menambahkan controller simulasi hemat energi
+use App\Http\Controllers\DeviceController;
 
 // Rute untuk pengguna yang belum login (guest)
 Route::middleware('guest')->group(function () {
@@ -71,9 +72,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/calculator', [CalculatorController::class, 'store'])->name('calculator.store');
 
     // Energy Saving Simulation Routes
-    Route::get('/simulasi-energi', [EnergySimulationController::class, 'index'])->name('energy.simulation.index');
-    Route::post('/simulasi-energi/hitung', [EnergySimulationController::class, 'calculate'])->name('energy.simulation.calculate');
-    Route::post('/simulasi-energi/simpan', [EnergySimulationController::class, 'save'])->name('energy.simulation.save');
-    Route::get('/simulasi-energi/riwayat', [EnergySimulationController::class, 'history'])->name('energy.simulation.history');
-    Route::get('/simulasi-energi/riwayat/{simulation}', [EnergySimulationController::class, 'showDetails'])->name('energy.simulation.showDetails');
+    Route::prefix('simulasi-energi')->name('energy.simulation.')->group(function () {
+        Route::get('/', [EnergySimulationController::class, 'index'])->name('index');
+        Route::post('/hitung', [EnergySimulationController::class, 'calculate'])->name('calculate');
+        Route::post('/simpan', [EnergySimulationController::class, 'save'])->name('save');
+        Route::get('/riwayat', [EnergySimulationController::class, 'history'])->name('history');
+        Route::get('/riwayat/{simulation}', [EnergySimulationController::class, 'showDetails'])->name('showDetails');
+        Route::delete('/riwayat/{simulation}', [EnergySimulationController::class, 'delete'])->name('delete');
+    });
+
+    // Device routes
+    Route::resource('devices', DeviceController::class);
+    
+    // Product routes
+    Route::resource('products', ProductController::class);
 });

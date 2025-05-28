@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Simulasi: ' . ($simulation->simulation_name ?? 'Tanpa Nama'))
+@section('title', 'Detail Simulasi: ' . $simulation->simulation_name)
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <header class="mb-6 flex items-center justify-between">
         <div>
             <h1 class="text-3xl font-bold text-green-900">
-                Detail Simulasi: <span class="text-green-700">{{ $simulation->simulation_name ?? 'Simulasi Tanpa Nama' }}</span>
+                Detail Simulasi: <span class="text-green-700">{{ $simulation->simulation_name }}</span>
             </h1>
             <p class="text-gray-600">Disimpan pada: {{ $simulation->created_at->format('d M Y, H:i:s') }}</p>
         </div>
@@ -22,7 +22,6 @@
     </header>
 
     <div class="bg-white p-6 rounded-lg shadow-md space-y-8">
-
         <!-- Ringkasan Penghematan -->
         <section class="p-6 bg-green-50 rounded-lg border border-green-200">
             <h2 class="text-2xl font-semibold text-green-800 mb-4">Ringkasan Penghematan</h2>
@@ -39,9 +38,9 @@
             <p class="mt-3 text-xs text-gray-500 text-center">Tarif listrik yang digunakan saat simulasi: Rp {{ number_format($simulation->electricity_tariff, 2, ',', '.') }}/kWh.</p>
         </section>
 
-        <!-- Detail Perbandingan Tabel Utama -->
+        <!-- Detail Perbandingan -->
         <section>
-            <h2 class="text-xl font-semibold text-green-800 mb-3">Detail Perbandingan Konsumsi & Biaya (Estimasi Bulanan)</h2>
+            <h2 class="text-xl font-semibold text-green-800 mb-3">Detail Perbandingan (Estimasi Bulanan)</h2>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-100">
@@ -71,14 +70,14 @@
         <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <h3 class="text-lg font-semibold text-green-700 mb-2">Peralatan & Penggunaan (Sebelum Perubahan)</h3>
-                @if(!empty($simulation->data_before) && is_array($simulation->data_before))
+                @if(!empty($dataBefore))
                     <ul class="list-disc list-inside bg-gray-50 p-4 rounded-md space-y-2">
-                        @foreach($simulation->data_before as $appliance)
+                        @foreach($dataBefore as $appliance)
                             <li class="text-sm text-gray-800">
-                                <strong class="font-medium">{{ $appliance['name'] ?? 'N/A' }}:</strong> 
-                                {{ $appliance['power'] ?? 'N/A' }} Watt, 
-                                {{ $appliance['hours_per_day'] ?? 'N/A' }} jam/hari, 
-                                {{ $appliance['days_per_week'] ?? 'N/A' }} hari/minggu.
+                                <strong class="font-medium">{{ $appliance['device'] }}:</strong> 
+                                {{ $appliance['wattage'] }} Watt, 
+                                {{ $appliance['hours'] }} jam/hari, 
+                                {{ $appliance['days'] }} hari/bulan.
                             </li>
                         @endforeach
                     </ul>
@@ -88,14 +87,14 @@
             </div>
             <div>
                 <h3 class="text-lg font-semibold text-green-700 mb-2">Peralatan & Penggunaan (Setelah Perubahan)</h3>
-                 @if(!empty($simulation->data_after) && is_array($simulation->data_after))
+                @if(!empty($dataAfter))
                     <ul class="list-disc list-inside bg-gray-50 p-4 rounded-md space-y-2">
-                        @foreach($simulation->data_after as $appliance)
+                        @foreach($dataAfter as $appliance)
                             <li class="text-sm text-gray-800">
-                                <strong class="font-medium">{{ $appliance['name'] ?? 'N/A' }}:</strong> 
-                                {{ $appliance['power'] ?? 'N/A' }} Watt, 
-                                {{ $appliance['hours_per_day'] ?? 'N/A' }} jam/hari, 
-                                {{ $appliance['days_per_week'] ?? 'N/A' }} hari/minggu.
+                                <strong class="font-medium">{{ $appliance['device'] }}:</strong> 
+                                {{ $appliance['wattage'] }} Watt, 
+                                {{ $appliance['hours'] }} jam/hari, 
+                                {{ $appliance['days'] }} hari/bulan.
                             </li>
                         @endforeach
                     </ul>

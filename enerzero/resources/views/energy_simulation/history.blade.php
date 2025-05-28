@@ -48,7 +48,7 @@
                         @foreach ($simulations as $simulation)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    {{ $simulation->simulation_name ?? 'Simulasi Tanpa Nama' }}
+                                    {{ $simulation->simulation_name }}
                                     @if($simulation->notes)
                                         <p class="text-xs text-gray-500">{{ Str::limit($simulation->notes, 50) }}</p>
                                     @endif
@@ -60,11 +60,17 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold {{ $simulation->cost_saved > 0 ? 'text-green-600' : ($simulation->cost_saved < 0 ? 'text-red-600' : 'text-gray-700') }}">
                                     Rp {{ number_format($simulation->cost_saved, 2, ',', '.') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                     <a href="{{ route('energy.simulation.showDetails', $simulation) }}" class="text-blue-600 hover:text-blue-800">
-                                        <i class="fas fa-eye mr-1"></i> Lihat Detail
+                                        <i class="fas fa-eye mr-1"></i> Lihat
                                     </a>
-                                    {{-- Add Edit/Delete links here later if needed --}}
+                                    <form action="{{ route('energy.simulation.delete', $simulation) }}" method="POST" class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-800" onclick="return confirm('Apakah Anda yakin ingin menghapus simulasi ini?')">
+                                            <i class="fas fa-trash-alt mr-1"></i> Hapus
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -73,7 +79,7 @@
             </div>
 
             <div class="mt-6">
-                {{ $simulations->links() }} 
+                {{ $simulations->links() }}
             </div>
         @endif
     </div>

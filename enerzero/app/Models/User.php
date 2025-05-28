@@ -38,7 +38,10 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected  $casts = [];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
     
     /**
      * Change autentication column with 'username'
@@ -48,5 +51,15 @@ class User extends Authenticatable
     public function getAuthIdentifierName()
     {
         return 'username';
+    }
+
+    public function devices()
+    {
+        return $this->hasMany(Device::class);
+    }
+
+    public function getAuthIdentifier()
+    {
+        return $this->username;
     }
 }
