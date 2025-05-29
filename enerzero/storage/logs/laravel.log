@@ -5762,3 +5762,4 @@
 #35 {main}
 "} 
 [2025-05-29 17:07:54] local.ERROR: Error in EnergySimulationController@index: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'enerzero.user_devices' doesn't exist (Connection: mysql, SQL: select * from `user_devices` where `user_devices`.`user_id` = 5 and `user_devices`.`user_id` is not null)  
+[2025-05-29 17:14:11] local.ERROR: Error in EnergySimulationController@index: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'enerzero.user_devices' doesn't exist (Connection: mysql, SQL: select * from `user_devices` where `user_devices`.`user_id` = 1 and `user_devices`.`user_id` is not null)  
