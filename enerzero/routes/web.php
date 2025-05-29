@@ -32,6 +32,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('maps', MapController::class);
     Route::get('maps/stations/{id}', [MapController::class, 'getStationDetails'])->name('maps.stations.details');
     Route::get('/forum', [ForumController::class, 'index'])->name('forum');
+  
+    Route::get('/notifications', [DashboardController::class, 'getNotifications'])->name('notifications');
+    Route::post('/notifications/read', [DashboardController::class, 'markAsRead'])->name('notifications.read');
     // Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 
     // CRUD
@@ -60,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('reviews', ReviewController::class)->except(['index', 'show']);
 
     Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
-
+  
     Route::get('/energy-usage', [EnergyUsageReportController::class, 'index'])->name('energy.index');
 
     Route::get('/energy/create', [EnergyUsageReportController::class, 'create'])->name('energy.create');

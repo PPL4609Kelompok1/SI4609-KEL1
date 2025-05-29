@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LeaderboardController extends Controller
 {
@@ -17,7 +18,7 @@ class LeaderboardController extends Controller
                 ['rank' => 5, 'name' => 'Bima', 'score' => 2300, 'avatar' => 'https://i.pravatar.cc/150?img=5'],
                 ['rank' => 6, 'name' => 'Fahri', 'score' => 2200, 'avatar' => 'https://i.pravatar.cc/150?img=6'],
                 ['rank' => 7, 'name' => 'Ari', 'score' => 2100, 'avatar' => 'https://i.pravatar.cc/150?img=7'],
-                ['rank' => 8, 'name' => '[username]', 'score' => 2000, 'avatar' => 'https://i.pravatar.cc/150?img=8'],
+                ['rank' => 8, 'name' => auth()->user()->username, 'score' => 2000, 'avatar' => 'https://i.pravatar.cc/150?img=8'],
                 ['rank' => 9, 'name' => 'Maya', 'score' => 1900, 'avatar' => 'https://i.pravatar.cc/150?img=9'],
                 ['rank' => 10, 'name' => 'Yuli', 'score' => 1800, 'avatar' => 'https://i.pravatar.cc/150?img=10'],
                 ['rank' => 11, 'name' => 'Rizky', 'score' => 1700, 'avatar' => 'https://i.pravatar.cc/150?img=11'],
@@ -69,8 +70,9 @@ class LeaderboardController extends Controller
         }
         
         $ranked = $dataSets[$category];
-        $userRank = collect($ranked)->firstWhere('name', '[username]');
+        $userRank = collect($ranked)->firstWhere('name', auth()->user()->username);
 
         return view('leaderboard.index', compact('ranked', 'userRank', 'category'));
+        // dd($userRank);
     }
 }
