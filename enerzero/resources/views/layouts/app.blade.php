@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     @stack('styles')
-    
+   
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -114,7 +114,6 @@
     <main class="flex-1 p-8 relative overflow-auto ml-56">
         @yield('content')
     </main>
-
     @stack('scripts')
 </body>
 </html>

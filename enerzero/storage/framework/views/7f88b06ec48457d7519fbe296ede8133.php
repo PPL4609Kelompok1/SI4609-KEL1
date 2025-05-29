@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <?php echo $__env->yieldPushContent('styles'); ?>
-    
+   
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -114,7 +114,6 @@
     <main class="flex-1 p-8 relative overflow-auto ml-56">
         <?php echo $__env->yieldContent('content'); ?>
     </main>
-
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html><?php /**PATH C:\Users\chris\OneDrive\Documents\SI4609-KEL1\enerzero\resources\views/layouts/app.blade.php ENDPATH**/ ?>
