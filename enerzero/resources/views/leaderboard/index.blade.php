@@ -47,7 +47,6 @@
             <div class="grid grid-cols-4 gap-4 px-4 py-2 items-center 
                 {{ $entry['name'] === Auth::user()->name ? 'bg-green-600 text-black font-bold' : 
                 ($entry['name'] === '[Community]' || $entry['name'] === '[Region]' ? 'bg-green-600 text-black' : 'hover:bg-green-600') }}">
-
                 <!-- Rank -->
                 <div class="flex justify-center items-center">
                     @if ($entry['rank'] == 1)

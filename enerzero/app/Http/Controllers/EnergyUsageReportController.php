@@ -12,13 +12,22 @@ class EnergyUsageReportController extends Controller
     {
         $reports = Report::all();
 
-        // Ambil 2 data terakhir untuk perbandingan
-        $latest = $reports->sortByDesc('id')->take(2);
-        $current = $latest->first()->usage ?? 0;
-        $previous = $latest->skip(1)->first()->usage ?? 0;
+        // Initialize default values
+        $current = 0;
+        $previous = 0;
+        $percentageChange = 0;
+        $trend = 'neutral';
 
-        $percentageChange = $previous ? number_format((($current - $previous) / $previous) * 100, 2) : 0;
-        $trend = $current >= $previous ? 'increase' : 'decrease';
+        // Only process comparison if we have reports
+        if ($reports->isNotEmpty()) {
+            // Ambil 2 data terakhir untuk perbandingan
+            $latest = $reports->sortByDesc('id')->take(2);
+            $current = $latest->first()->usage ?? 0;
+            $previous = $latest->skip(1)->first()->usage ?? 0;
+
+            $percentageChange = $previous ? number_format((($current - $previous) / $previous) * 100, 2) : 0;
+            $trend = $current >= $previous ? 'increase' : 'decrease';
+        }
 
         $comparisonData = [
             'current_month' => $current,

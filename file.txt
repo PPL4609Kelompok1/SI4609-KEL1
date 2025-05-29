@@ -1,6 +1,3 @@
-SI4609 - Kelompok 1
-
-=======
 SI4609-KELOMPOK 1
 Muhammad Shafwan Hawari Yunas - 1202220224
 Dhifulloh Dhiya Ulhaq - 1202220139
@@ -10,8 +7,17 @@ Raden Rayhan Suryo Prasetyo - 1202220031
 Muhammad Naufal Danuwijaya - 1202220267
 =======
 Muhammad Shafwan Hawari Yunas
+Dhifulloh Dhiya Ulhaq - 1202220139 - SI4609
+=======
+Dhifulloh Dhiya Ulhaq
+Ariel Christsando Yudistya Putra - 1202223311A
+=======
 Dhifulloh Dhiya Ulhaq - 1202220139
 Ariel Christsando Yudistya Putra
 Sarah Luki Raihani
 Raden Rayhan Suryo Prasetyo
+Muhammad Naufal Danuwijaya - 1202220267 - SI4609
+=======
+Raden Rayhan Suryo Prasetyo 1202220031 jago banget ngoding
+
 Muhammad Naufal Danuwijaya
