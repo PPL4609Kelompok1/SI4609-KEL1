@@ -39,7 +39,6 @@ class DashboardController extends Controller
 
         $products = Product::all();
 
-
         $notification = [
             'type' => 'warning',
             'message' => 'Pola konsumsi energi kamu menunjukkan tren yang kurang baik. Coba evaluasi penggunaan listrik harianmu.'

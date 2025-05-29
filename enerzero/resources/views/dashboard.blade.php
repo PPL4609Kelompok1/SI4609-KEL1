@@ -167,7 +167,6 @@
             menu.classList.add('hidden');
         }
     });
-
     const notifButton = document.getElementById('notif-button');
     const notifDropdown = document.getElementById('notif-dropdown');
     const notifList = document.getElementById('notif-list');

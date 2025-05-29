@@ -4,9 +4,17 @@
 
 @section('content')
 @php
+<<<<<<< HEAD
+    $usageArray = $monthlyUsage->toArray();
+    $maxUsage = !empty($usageArray) ? max($usageArray) : 1;
+@endphp
+
+
+=======
     $maxUsage = $monthlyUsage->isNotEmpty() ? max($monthlyUsage->toArray()) : 1;
 @endphp
 
+>>>>>>> origin/main
 <div class="space-y-6">
     <header class="mb-6 flex items-center justify-between">
         <div class="flex items-center gap-2">

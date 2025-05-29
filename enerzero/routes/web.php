@@ -10,6 +10,7 @@ use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\EnergyUsageReportController;
+use App\Http\Controllers\MissionController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\EnergySimulationController; # Menambahkan controller simulasi hemat energi
 use App\Http\Controllers\DeviceController;
@@ -63,7 +64,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('reviews', ReviewController::class)->except(['index', 'show']);
 
     Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
-  
     Route::get('/energy-usage', [EnergyUsageReportController::class, 'index'])->name('energy.index');
 
     Route::get('/energy/create', [EnergyUsageReportController::class, 'create'])->name('energy.create');
@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/energy/{id}', [EnergyUsageReportController::class, 'update'])->name('energy.update');
     Route::delete('/energy/{id}', [EnergyUsageReportController::class, 'destroy'])->name('energy.destroy');
 
+    Route::get('/mission', [MissionController::class, 'index'])->name('mission.index'); 
     Route::get('/calculator', [CalculatorController::class, 'index'])->name('calculator.index');
     Route::post('/calculator', [CalculatorController::class, 'store'])->name('calculator.store');
 
