@@ -37,7 +37,8 @@
 </head>
 <body class="bg-green-100 min-h-screen flex">
     <!-- Sidebar -->
-    <aside class="w-56 bg-white shadow-lg">
+    {{-- keep yang ini, scroll fixed gak ikut ke scroll --}}
+    <aside class="w-56 bg-white shadow-lg fixed top-0 left-0 h-full">
         <div class="flex items-center gap-2 px-4 py-6 border-b border-gray-200">
             <a href="{{ url('/') }}" class="select-none">
                 <img src="{{ asset('Logo Icon.png') }}" alt="Enerzero Icon" class="h-20 w-auto">
@@ -110,7 +111,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 p-8 relative overflow-auto">
+    <main class="flex-1 p-8 relative overflow-auto ml-56">
         @yield('content')
     </main>
 

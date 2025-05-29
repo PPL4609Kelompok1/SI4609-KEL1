@@ -51,46 +51,27 @@
     <!-- Main Cards Wrapper -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <!-- Simulation Data Summary -->
+        <!-- Monthly Comparison Card -->
         <article class="col-span-2 bg-white rounded-lg p-6 shadow-md">
-            <h2 class="text-green-700 font-semibold text-lg mb-4">SIMULATION DATA SUMMARY</h2>
-            <div class="flex gap-6">
-                <!-- Pie Chart and Legend -->
-                <div class="flex-1 flex gap-4">
-                    <div class="w-[150px] h-[150px]">
-                        <!-- Placeholder Pie Chart with SVG -->
-                        <svg viewBox="0 0 36 36" class="w-full h-full">
-                            <circle r="16" cx="18" cy="18" fill="#c6f6d5" />
-                            <circle r="16" cx="18" cy="18" fill="#34a853" stroke="#2f855a" stroke-width="5" stroke-dasharray="20 80" stroke-dashoffset="25" transform="rotate(-90 18 18)" />
-                            <circle r="16" cx="18" cy="18" fill="none" stroke="#a0aec0" stroke-width="5" stroke-dasharray="35 65" stroke-dashoffset="45" transform="rotate(45 18 18)" />
-                            <circle r="16" cx="18" cy="18" fill="none" stroke="#9ae6b4" stroke-width="5" stroke-dasharray="30 70" stroke-dashoffset="75" transform="rotate(180 18 18)" />
-                        </svg>
-                    </div>
-                    <ul class="text-gray-700 text-sm space-y-2 self-center">
-                        <li class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-green-200 block"></span> Good energy usage
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-green-400 block"></span> Bad energy usage
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-green-600 block"></span> Really bad energy usage
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-green-800 block"></span> Really good energy usage
-                        </li>
-                    </ul>
+            <h2 class="text-xl font-semibold text-green-700 mb-4">Monthly Comparison</h2>
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="text-gray-600">Current Month Usage</p>
+                    <p class="text-2xl font-bold"><?php echo e($comparisonData['current_month']); ?> kWh</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-600">Previous Month</p>
+                    <p class="text-xl"><?php echo e($comparisonData['previous_month']); ?> kWh</p>
                 </div>
             </div>
-
-            <p class="mt-4 text-gray-800 text-sm">
-                Hebat! dari data yang kami dapat, kami mengetahui bahwa kamu peka terhadap energi disekitar kamu.
-                Semoga ini bisa terus berlangsung dan menjadi lebih baik. Kedepannya coba matikan hal...
-            </p>
-
-            <button class="mt-4 bg-yellow-400 text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300">
+            <div class="flex items-center gap-2 <?php echo e($comparisonData['trend'] === 'increase' ? 'text-red-500' : 'text-green-500'); ?>">
+                <i class="fas fa-<?php echo e($comparisonData['trend'] === 'increase' ? 'arrow-up' : 'arrow-down'); ?>"></i>
+                <span class="font-semibold"><?php echo e($comparisonData['percentage_change']); ?>% <?php echo e($comparisonData['trend']); ?></span>
+                <span class="text-gray-600">from last month</span>
+                <a href="/energy-usage" class="mt-4 bg-yellow-400 text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300">
                 See Detail
-            </button>
+                </a>
+            </div>
         </article>
 
         <!-- Education Card -->
@@ -173,23 +154,22 @@
 
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>document.addEventListener('DOMContentLoaded', function() {
+
     const button = document.getElementById('settings-button');
     const menu = document.getElementById('dropdown-menu');
 
     button.addEventListener('click', function(event) {
-        event.stopPropagation(); // Supaya klik button tidak dianggap klik diluar
-        menu.classList.toggle('hidden'); // Toggle buka/tutup
+        event.stopPropagation();
+        menu.classList.toggle('hidden');
     });
 
     document.addEventListener('click', function(event) {
-        // Kalau klik di luar button dan menu, tutup menu
         if (!menu.contains(event.target) && !button.contains(event.target)) {
             menu.classList.add('hidden');
         }
     });
-    
     const notifButton = document.getElementById('notif-button');
     const notifDropdown = document.getElementById('notif-dropdown');
 
