@@ -35,21 +35,17 @@ class ForumController extends Controller
     // Menyimpan forum baru
     public function store(Request $request)
     {
+        $user = Auth::user();
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
         ]);
 
-        // Forum::create([
-        //     'title' => $request->title,
-        //     'description' => $request->description,
-        //     'username' => 'Mas Agus Indihome' // Ganti kalau pakai auth
-        // ]);
-
         Forum::create([
             'title' => $request->title,
             'description' => $request->description,
-            'username' => Auth::user()->username,
+            'username' => $user->username,
         ]);
 
         return redirect()->route('forum')->with('success', 'Forum berhasil dibuat!');
@@ -88,7 +84,10 @@ class ForumController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
         ]);
+
+        $forum = Forum::findOrFail($id);
         $forum->update($request->only('title', 'description'));
+
         return redirect()->route('forum.show', $forum->id)->with('success', 'Forum berhasil diperbarui!');
     }
 
@@ -109,20 +108,15 @@ class ForumController extends Controller
     // reply 
     public function reply(Request $request, $id)
     {
+        $user = Auth::user();
+
         $request->validate([
             'reply' => 'required|string',
         ]);
 
-        // ForumReply::create([
-        //     'forum_id' => $id,
-        //     'username' => 'Mas Agus',
-        //      // Ganti sesuai user auth
-        //     'reply' => $request->reply,
-        // ]);
-
         ForumReply::create([
             'forum_id' => $id,
-            'username' => Auth::user()->username,
+            'username' => $user->username,
             'reply' => $request->reply,
         ]);
 

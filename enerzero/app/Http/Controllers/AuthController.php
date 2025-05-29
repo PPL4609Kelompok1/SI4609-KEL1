@@ -41,9 +41,7 @@ class AuthController extends Controller
 
         // Validasi login
         if (Auth::attempt($credentials)) {
-            info('Login');
             $request->session()->regenerate();
-            info(auth()->user());
             return redirect()->intended('dashboard');
         }
 

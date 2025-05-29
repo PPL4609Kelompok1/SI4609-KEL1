@@ -86,7 +86,7 @@
     <div class="right">
         <h1>Welcome Back!</h1>
         <p>Small energy changes, massive global impact. With Enerzero, transforming how the world uses power!</p>
-        <form action="/login" method="POST">
+        <form action="{{ route('login') }}" method="POST">
             @csrf
             <div>
                 <label for="username">Username</label>
