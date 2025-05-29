@@ -52,7 +52,7 @@
 
     <!-- Main Cards Wrapper -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
+    
         <!-- Monthly Comparison Card -->
         <article class="col-span-2 bg-white rounded-lg p-6 shadow-md">
             <h2 class="text-xl font-semibold text-green-700 mb-4">Monthly Comparison</h2>
@@ -101,7 +101,6 @@
         <!-- Forum -->
         <article class="md:col-span-3 bg-white rounded-lg p-4 shadow-md overflow-auto max-h-[320px] scrollbar-thin">
             <h3 class="text-green-700 font-semibold text-lg mb-4">FORUM</h3>
-
             <div class="space-y-4">
             @foreach ($forums as $forum)
                 <a href="{{ route('forum.show', $forum->id) }}" class="block hover:shadow-lg transition">
@@ -163,7 +162,6 @@
         event.stopPropagation();
         menu.classList.toggle('hidden');
     });
-
     document.addEventListener('click', function(event) {
         if (!menu.contains(event.target) && !button.contains(event.target)) {
             menu.classList.add('hidden');
@@ -171,6 +169,8 @@
     });
     const notifButton = document.getElementById('notif-button');
     const notifDropdown = document.getElementById('notif-dropdown');
+    const notifList = document.getElementById('notif-list');
+    const notifBadge = document.getElementById('notif-badge');
 
     notifButton?.addEventListener('click', function(event) {
         event.stopPropagation();
@@ -191,12 +191,10 @@
         const percentage = -(index * 100);
         slider.style.transform = `translateX(${percentage}%)`;
     }
-
     setInterval(() => {
         current = (current + 1) % totalSlides;
         showSlide(current);
     }, 3000);
 });
 </script>
-
 @endsection

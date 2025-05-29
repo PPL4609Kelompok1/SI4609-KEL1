@@ -41,6 +41,7 @@ class ProductController extends Controller
     public function show(Product $product, Request $request)
     {
         $product->load('reviews');
+
         $user = Auth::user();
 
         // Dummy data for recommendations
@@ -81,7 +82,6 @@ class ProductController extends Controller
         $recommendations = collect($dummyProducts)->map(function($product) {
             return (object) $product;
         });
-
         return view('products.show', compact('product', 'recommendations', 'user'));
     }
 
