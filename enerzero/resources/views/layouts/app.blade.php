@@ -40,7 +40,8 @@
     <aside class="w-56 bg-white shadow-lg">
         <div class="flex items-center gap-2 px-4 py-6 border-b border-gray-200">
             <a href="{{ url('/') }}" class="select-none">
-                <img src="Logo Icon.png" alt="Enerzero Icon" class="h-20 w-auto">
+                <img src="{{ asset('Logo Icon.png') }}" alt="Enerzero Icon" class="h-20 w-auto">
+            </a>
         </div>
             <ul>
                 <li>
@@ -108,3 +109,5 @@
         @yield('content')
     </main>
     @stack('scripts')
+</body>
+</html>
