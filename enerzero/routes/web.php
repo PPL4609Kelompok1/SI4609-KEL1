@@ -66,7 +66,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/energy/{id}', [EnergyUsageReportController::class, 'destroy'])->name('energy.destroy');
 
     Route::get('/mission', [MissionController::class, 'index'])->name('mission.index'); 
-
     Route::get('/calculator', [CalculatorController::class, 'index'])->name('calculator.index');
     Route::post('/calculator', [CalculatorController::class, 'store'])->name('calculator.store');
 
