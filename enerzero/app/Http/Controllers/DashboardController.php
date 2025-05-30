@@ -80,4 +80,3 @@ class DashboardController extends Controller
         return response()->json(['status' => 'success', 'id' => $id]);
     }
 }
-}
