@@ -31,6 +31,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/forum', [ForumController::class, 'index'])->name('forum');
     Route::get('/notifications', [DashboardController::class, 'getNotifications'])->name('notifications');
     Route::post('/notifications/read', [DashboardController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return response()->json(['success' => true]);
+    });
+
+
     // Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 
     // CRUD

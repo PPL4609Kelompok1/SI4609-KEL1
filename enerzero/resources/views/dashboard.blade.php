@@ -169,6 +169,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    checkUnreadNotifications();
+
     const button = document.getElementById('settings-button');
     const menu = document.getElementById('dropdown-menu');
     button.addEventListener('click', function(event) {
@@ -189,18 +191,35 @@ document.addEventListener('DOMContentLoaded', function() {
     notifButton?.addEventListener('click', function(event) {
         event.stopPropagation();
         notifDropdown?.classList.toggle('hidden');
-        loadNotifications();
+
+        // Langsung sembunyikan badge
+        notifBadge.classList.add('hidden');
+
+        // Tandai semua sebagai dibaca saat klik tombol
+        loadNotifications(false);
     });
 
     document.addEventListener('click', function(event) {
         if (!notifDropdown.contains(event.target) && !notifButton.contains(event.target)) {
             notifDropdown.classList.add('hidden');
+
+            // Tambahkan ini:
+            fetch('/notifications/read-all', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
         }
     });
 
-    notifList?.addEventListener('click', function(e) {
-        if (e.target.tagName === 'BUTTON') {
-            const id = e.target.getAttribute('data-id');
+    notifList?.addEventListener('click', function (e) {
+        const notifItem = e.target.closest('li[data-id]');
+        if (notifItem && notifItem.classList.contains('bg-gray-100')) {
+            const id = notifItem.getAttribute('data-id');
+            notifItem.classList.remove('bg-gray-100');
+            notifItem.classList.add('bg-white');
             fetch('/notifications/read', {
                 method: 'POST',
                 headers: {
@@ -208,46 +227,80 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({ id })
-            }).then(() => {
-                e.target.parentElement.remove();
             });
         }
     });
 
-    function loadNotifications() {
+    function loadNotifications(markAllAsRead = false) {
         fetch('/notifications')
             .then(res => res.json())
             .then(data => {
                 notifList.innerHTML = '';
-                if (data.length === 0) {
-                    notifList.innerHTML = '<li class="text-gray-400 text-center">Tidak ada notifikasi baru</li>';
+
+                // ✅ Jika kosong, tampilkan pesan ini:
+                if (!data || data.length === 0) {
+                    notifList.innerHTML = '<li class="text-gray-400 text-center">Tidak ada notifikasi</li>';
+                    notifBadge.classList.add('hidden');
+                    return;
+                }
+
+                let unreadIds = [];
+
+                data.forEach(notif => {
+                    const li = document.createElement('li');
+                    li.className = 'cursor-pointer px-3 py-2 rounded hover:bg-gray-50 transition';
+                    li.setAttribute('data-id', notif.id);
+
+                    if (notif.read_at === null) {
+                        li.classList.add('bg-gray-100');
+                        unreadIds.push(notif.id);
+                    } else {
+                        li.classList.add('bg-white');
+                    }
+
+                    li.innerHTML = `<span>${notif.data.message}</span>`;
+                    notifList.appendChild(li);
+                });
+
+                // ✅ Sembunyikan badge jika semua sudah dibaca
+                if (unreadIds.length === 0) {
                     notifBadge.classList.add('hidden');
                 } else {
                     notifBadge.classList.remove('hidden');
-                    data.forEach(notif => {
-                        const li = document.createElement('li');
-                        li.className = 'flex justify-between items-center gap-2 border-b pb-2';
-                        li.innerHTML = `
-                            <span>${notif.data.message}</span>
-                            <button data-id="${notif.id}" class="text-xs text-blue-600 hover:underline">Tandai dibaca</button>
-                        `;
-                        notifList.appendChild(li);
+                }
+
+                // ✅ Tandai semua sebagai dibaca jika diminta
+                if (markAllAsRead && unreadIds.length > 0) {
+                    fetch('/notifications/read-all', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ ids: unreadIds })
                     });
                 }
+            })
+            .catch(error => {
+                notifList.innerHTML = '<li class="text-red-500 text-center">Gagal memuat notifikasi</li>';
+                notifBadge.classList.add('hidden');
             });
     }
 
-    const slider = document.getElementById('product-slider');
-    const totalSlides = slider.children.length;
-    let current = 0;
-    function showSlide(index) {
-        const percentage = -(index * 100);
-        slider.style.transform = `translateX(${percentage}%)`;
+
+
+    function checkUnreadNotifications() {
+        fetch('/notifications')
+            .then(res => res.json())
+            .then(data => {
+                const unread = data.filter(n => n.read_at === null);
+                if (unread.length > 0) {
+                    notifBadge.classList.remove('hidden');
+                } else {
+                    notifBadge.classList.add('hidden');
+                }
+            });
     }
-    setInterval(() => {
-        current = (current + 1) % totalSlides;
-        showSlide(current);
-    }, 3000);
 });
 </script>
 
