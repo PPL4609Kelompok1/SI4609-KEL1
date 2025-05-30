@@ -188,7 +188,17 @@ document.addEventListener('DOMContentLoaded', function () {
                         unreadCount++;
                     }
                     li.setAttribute('data-id', notif.id);
-                    li.setAttribute('data-url', notif.data.url || '/');
+                    let url = '/'; // default
+                    if (notif.type === 'energy_alert') {
+                        url = '/energy-report';
+                    } else if (notif.type === 'daily_challenge') {
+                        url = '/challenge';
+                    } else if (notif.data.url) {
+                        url = notif.data.url;
+                    }
+
+                    li.setAttribute('data-url', url);
+
                     li.innerHTML = `<span>${notif.data.message}</span>`;
                     notifList.appendChild(li);
 
