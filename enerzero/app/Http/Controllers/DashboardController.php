@@ -3,47 +3,55 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Forum;
 use App\Models\Product;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Report;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $username = 'User123';
+        $username = Auth::user()->username;
 
-        $simulationSummary = [
-            ['label' => 'Good energy usage', 'color' => 'rgba(173, 237, 193, 0.7)'],
-            ['label' => 'Bad energy usage', 'color' => 'rgba(141, 210, 152, 0.7)'],
-            ['label' => 'Really bad energy usage', 'color' => 'rgba(230, 230, 230, 0.7)'],
-            ['label' => 'Really good energy usage', 'color' => 'rgba(44, 132, 52, 0.7)'],
+        // Ambil semua report usage
+        $reports = Report::all();
+
+        // Ambil 2 data terakhir untuk perbandingan
+        $latest = $reports->sortByDesc('id')->take(2);
+        $current = $latest->first()->usage ?? 0;
+        $previous = $latest->skip(1)->first()->usage ?? 0;
+
+        $percentageChange = $previous ? number_format((($current - $previous) / $previous) * 100, 2) : 0;
+        $trend = $current >= $previous ? 'increase' : 'decrease';
+        
+        $comparisonData = [
+            'current_month' => $current,
+            'previous_month' => $previous,
+            'percentage_change' => $percentageChange,
+            'trend' => $trend
         ];
 
         $forums = Forum::withCount(['replies', 'likes'])
-            ->latest()
-            ->take(5)
-            ->get();
+        ->latest()
+        ->take(5)
+        ->get();
 
         $products = Product::all();
 
-        return view('dashboard', compact('username', 'simulationSummary', 'forums', 'products'));
-    }
+        $notification = [
+            'type' => 'warning',
+            'message' => 'Pola konsumsi energi kamu menunjukkan tren yang kurang baik. Coba evaluasi penggunaan listrik harianmu.'
+        ];
 
-    public function getNotifications()
-    {
-        $notifications = auth()->user()->notifications; // include read and unread
+        return view('dashboard', compact('username', 'reports', 'comparisonData', 'forums', 'products', 'notification'));
 
-        return response()->json($notifications);
     }
 
     public function markAsRead(Request $request)
     {
-        $notification = auth()->user()->notifications()->find($request->id);
-        if ($notification) {
-            $notification->markAsRead();
-        }
-
-        return response()->json(['status' => 'success', 'id' => $request->id]);
+        $id = $request->input('id');
+        return response()->json(['status' => 'success', 'id' => $id]);
     }
 }
+

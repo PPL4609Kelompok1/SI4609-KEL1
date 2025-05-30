@@ -6,7 +6,7 @@
 <div class="space-y-6">
 
     <!-- Header -->
-    <header class="sticky top-0 z-50 mb-6 flex items-center justify-between ">
+    <header class="mb-6 flex items-center justify-between relative">
         <div class="flex items-center gap-2">
             <i class="fas fa-desktop text-2xl text-green-700"></i>
             <h1 class="text-3xl font-bold text-green-900">Dashboard</h1>
@@ -16,16 +16,15 @@
                 <i class="fas fa-bell fa-lg"></i>
                 <span id="notif-badge" class="absolute top-0 right-0 block w-2 h-2 bg-red-500 rounded-full hidden"></span>
             </button>
-        <!-- Dropdown Notifikasi Sticky dan Interaktif -->
-        <div id="notif-dropdown" class="absolute right-0 top-full mt-2 w-72 max-h-80 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden hidden z-50 transition-all duration-300 ease-in-out">
-            <div class="p-4 text-sm text-gray-800 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
-                <p class="font-bold mb-2 text-green-700">Notifikasi</p>
-                <ul id="notif-list" class="space-y-3 text-sm">
-                    <li class="text-gray-400 text-center">Memuat notifikasi...</li>
-                </ul>
+            <!-- Dropdown Notifikasi -->
+            <div id="notif-dropdown" class="absolute right-0 top-full mt-2 w-72 max-h-80 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden hidden z-50 transition-all duration-300 ease-in-out">
+                <div class="p-4 text-sm text-gray-800 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                    <p class="font-bold mb-2 text-green-700">Notifikasi</p>
+                    <ul id="notif-list" class="space-y-3 text-sm">
+                        <li class="text-gray-400 text-center">Memuat notifikasi...</li>
+                    </ul>
+                </div>
             </div>
-        </div>
-
 
             <button title="Settings" class="hover:text-green-700" id="settings-button">
                 <i class="fas fa-cog fa-lg"></i>
@@ -53,42 +52,27 @@
     <!-- Main Cards Wrapper -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <!-- Simulation Data Summary -->
+        <!-- Monthly Comparison Card -->
         <article class="col-span-2 bg-white rounded-lg p-6 shadow-md">
-            <h2 class="text-green-700 font-semibold text-lg mb-4">SIMULATION DATA SUMMARY</h2>
-            <div class="flex gap-6">
-                <div class="flex-1 flex gap-4">
-                    <div class="w-[150px] h-[150px]">
-                        <svg viewBox="0 0 36 36" class="w-full h-full">
-                            <circle r="16" cx="18" cy="18" fill="#c6f6d5" />
-                            <circle r="16" cx="18" cy="18" fill="#34a853" stroke="#2f855a" stroke-width="5" stroke-dasharray="20 80" stroke-dashoffset="25" transform="rotate(-90 18 18)" />
-                            <circle r="16" cx="18" cy="18" fill="none" stroke="#a0aec0" stroke-width="5" stroke-dasharray="35 65" stroke-dashoffset="45" transform="rotate(45 18 18)" />
-                            <circle r="16" cx="18" cy="18" fill="none" stroke="#9ae6b4" stroke-width="5" stroke-dasharray="30 70" stroke-dashoffset="75" transform="rotate(180 18 18)" />
-                        </svg>
-                    </div>
-                    <ul class="text-gray-700 text-sm space-y-2 self-center">
-                        <li class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-green-200 block"></span> Good energy usage
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-green-400 block"></span> Bad energy usage
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-green-600 block"></span> Really bad energy usage
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-green-800 block"></span> Really good energy usage
-                        </li>
-                    </ul>
+            <h2 class="text-xl font-semibold text-green-700 mb-4">Monthly Comparison</h2>
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="text-gray-600">Current Month Usage</p>
+                    <p class="text-2xl font-bold">{{ $comparisonData['current_month'] }} kWh</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-600">Previous Month</p>
+                    <p class="text-xl">{{ $comparisonData['previous_month'] }} kWh</p>
                 </div>
             </div>
-            <p class="mt-4 text-gray-800 text-sm">
-                Hebat! dari data yang kami dapat, kami mengetahui bahwa kamu peka terhadap energi disekitar kamu.
-                Semoga ini bisa terus berlangsung dan menjadi lebih baik.
-            </p>
-            <button class="mt-4 bg-yellow-400 text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300">
-                See Detail
-            </button>
+            <div class="flex items-center gap-2 {{ $comparisonData['trend'] === 'increase' ? 'text-red-500' : 'text-green-500' }}">
+                <i class="fas fa-{{ $comparisonData['trend'] === 'increase' ? 'arrow-up' : 'arrow-down' }}"></i>
+                <span class="font-semibold">{{ $comparisonData['percentage_change'] }}% {{ $comparisonData['trend'] }}</span>
+                <span class="text-gray-600">from last month</span>
+                <a href="/energy-usage" class="mt-4 bg-yellow-400 text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300">
+                    See Detail
+                </a>
+            </div>
         </article>
 
         <!-- Education Card -->
@@ -100,7 +84,7 @@
                     Dari Kesadaran Menuju Tindakan: Edukasi Energi sebagai Pendorong Pembangunan Berkelanjutan
                 </p>
                 <p class="text-gray-800 text-sm my-2">
-                    Edukasi energi mencakup berbagai inisiatif yang ditujukan untuk menumbuhkan kesadaran, pemahaman, dan perilaku yang bertanggung jawab terhadap energi.
+                    Edukasi energi mencakup berbagai inisiatif yang ditujukan untuk menumbuhkan kesadaran, pemahaman, dan perilaku yang bertanggung jawab terhadapi...
                 </p>
                 <button class="mt-2 bg-yellow-400 text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300">
                     Read More
@@ -145,7 +129,7 @@
         <div class="overflow-hidden bg-white rounded-lg p-4 shadow-md">
             <h3 class="text-green-700 font-semibold text-lg mb-4 uppercase">PRODUCTS</h3>
             <div class="flex gap-4 transition-transform duration-700 ease-in-out" id="product-slider">
-                @foreach ($products as $product)
+                @foreach ($products as $index => $product)
                 <div class="w-full flex-shrink-0">
                     <div class="product-slide w-full h-full">
                         <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-40 object-contain mb-2 mx-auto" />
@@ -168,139 +152,107 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    checkUnreadNotifications();
-
-    const button = document.getElementById('settings-button');
-    const menu = document.getElementById('dropdown-menu');
-    button.addEventListener('click', function(event) {
-        event.stopPropagation();
-        menu.classList.toggle('hidden');
-    });
-    document.addEventListener('click', function(event) {
-        if (!menu.contains(event.target) && !button.contains(event.target)) {
-            menu.classList.add('hidden');
-        }
-    });
-
+document.addEventListener('DOMContentLoaded', function () {
     const notifButton = document.getElementById('notif-button');
     const notifDropdown = document.getElementById('notif-dropdown');
     const notifList = document.getElementById('notif-list');
     const notifBadge = document.getElementById('notif-badge');
 
-    notifButton?.addEventListener('click', function(event) {
+    // ➤ Tampilkan badge saat halaman dimuat (panggil saat pertama kali)
+    checkUnreadNotifications();
+
+    notifButton?.addEventListener('click', function (event) {
         event.stopPropagation();
         notifDropdown?.classList.toggle('hidden');
 
-        // Langsung sembunyikan badge
-        notifBadge.classList.add('hidden');
+        // Tampilkan loading dulu
+        notifList.innerHTML = '<li class="text-gray-400 text-center">Memuat notifikasi...</li>';
 
-        // Tandai semua sebagai dibaca saat klik tombol
-        loadNotifications(false);
-    });
-
-    document.addEventListener('click', function(event) {
-        if (!notifDropdown.contains(event.target) && !notifButton.contains(event.target)) {
-            notifDropdown.classList.add('hidden');
-
-            // Tambahkan ini:
-            fetch('/notifications/read-all', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            });
-        }
-    });
-
-    notifList?.addEventListener('click', function (e) {
-        const notifItem = e.target.closest('li[data-id]');
-        if (notifItem && notifItem.classList.contains('bg-gray-100')) {
-            const id = notifItem.getAttribute('data-id');
-            notifItem.classList.remove('bg-gray-100');
-            notifItem.classList.add('bg-white');
-            fetch('/notifications/read', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ id })
-            });
-        }
-    });
-
-    function loadNotifications(markAllAsRead = false) {
         fetch('/notifications')
             .then(res => res.json())
             .then(data => {
                 notifList.innerHTML = '';
+                let unreadCount = 0;
 
-                // ✅ Jika kosong, tampilkan pesan ini:
-                if (!data || data.length === 0) {
-                    notifList.innerHTML = '<li class="text-gray-400 text-center">Tidak ada notifikasi</li>';
-                    notifBadge.classList.add('hidden');
+                if (data.length === 0) {
+                    notifList.innerHTML = '<li class="text-gray-400 text-center">Tidak ada notifikasi baru</li>';
+                    notifBadge?.classList.add('hidden');
                     return;
                 }
 
-                let unreadIds = [];
-
                 data.forEach(notif => {
                     const li = document.createElement('li');
-                    li.className = 'cursor-pointer px-3 py-2 rounded hover:bg-gray-50 transition';
-                    li.setAttribute('data-id', notif.id);
-
-                    if (notif.read_at === null) {
-                        li.classList.add('bg-gray-100');
-                        unreadIds.push(notif.id);
-                    } else {
-                        li.classList.add('bg-white');
+                    li.className = 'cursor-pointer px-3 py-2 rounded hover:bg-gray-100 transition';
+                    if (!notif.read_at) {
+                        li.classList.add('bg-gray-100'); // notifikasi belum dibaca
+                        unreadCount++;
                     }
-
+                    li.setAttribute('data-id', notif.id);
+                    li.setAttribute('data-url', notif.data.url || '/');
                     li.innerHTML = `<span>${notif.data.message}</span>`;
                     notifList.appendChild(li);
+
                 });
 
-                // ✅ Sembunyikan badge jika semua sudah dibaca
-                if (unreadIds.length === 0) {
-                    notifBadge.classList.add('hidden');
-                } else {
-                    notifBadge.classList.remove('hidden');
-                }
+                // Sembunyikan badge setelah dibuka
+                notifBadge?.classList.add('hidden');
 
-                // ✅ Tandai semua sebagai dibaca jika diminta
-                if (markAllAsRead && unreadIds.length > 0) {
-                    fetch('/notifications/read-all', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ ids: unreadIds })
-                    });
-                }
-            })
-            .catch(error => {
-                notifList.innerHTML = '<li class="text-red-500 text-center">Gagal memuat notifikasi</li>';
-                notifBadge.classList.add('hidden');
+                // Tandai sebagai dibaca
+                fetch('/notifications/read-all', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                });
             });
-    }
+    });
 
+    // Tutup dropdown jika klik di luar
+    document.addEventListener('click', function (event) {
+        if (!notifDropdown?.contains(event.target) && !notifButton?.contains(event.target)) {
+            notifDropdown?.classList.add('hidden');
+        }
+    });
 
-
+    // ➤ Cek apakah ada notifikasi yang belum dibaca (untuk badge)
     function checkUnreadNotifications() {
         fetch('/notifications')
             .then(res => res.json())
             .then(data => {
                 const unread = data.filter(n => n.read_at === null);
                 if (unread.length > 0) {
-                    notifBadge.classList.remove('hidden');
+                    notifBadge?.classList.remove('hidden');
                 } else {
-                    notifBadge.classList.add('hidden');
+                    notifBadge?.classList.add('hidden');
                 }
             });
     }
+
+    notifList.addEventListener('click', function (e) {
+        const li = e.target.closest('li[data-id]');
+        if (!li) return;
+
+        const id = li.getAttribute('data-id');
+        const url = li.getAttribute('data-url');
+
+        // tandai sebagai dibaca (hilangkan abu-abu)
+        li.classList.remove('bg-gray-100');
+        li.classList.add('bg-white');
+
+        fetch('/notifications/read', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ id })
+        }).then(() => {
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
 });
 </script>
 

@@ -5,47 +5,64 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    public function store(Request $request)
+    public function __construct()
     {
-        $validated = $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|min:10',
-            'product_id' => 'required|exists:products,id'
-        ]);
-
-        $review = Review::create($validated);
-
-        return redirect()->route('products.show', $review->product_id)
-            ->with('success', 'Review submitted successfully!');
+        $this->middleware('auth');
     }
 
-    public function edit(Review $review)
+    public function store(Request $request, Product $product)
     {
-        return view('reviews.edit', compact('review'));
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:1000'
+        ]);
+
+        $review = new Review();
+        $review->user_id = Auth::id();
+        $review->product_id = $product->id;
+        $review->rating = $request->rating;
+        $review->comment = $request->comment;
+        $review->save();
+
+        return redirect()->back()->with('success', 'Review berhasil ditambahkan');
+    }
+
+    public function show(Review $review)
+    {
+        return view('reviews.show', compact('review'));
     }
 
     public function update(Request $request, Review $review)
     {
-        $validated = $request->validate([
+        if ($review->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|min:10'
+            'comment' => 'required|string|max:1000'
         ]);
 
-        $review->update($validated);
+        $review->update([
+            'rating' => $request->rating,
+            'comment' => $request->comment
+        ]);
 
-        return redirect()->route('products.show', $review->product_id)
-            ->with('success', 'Review updated successfully!');
+        return redirect()->back()->with('success', 'Review berhasil diperbarui');
     }
 
     public function destroy(Review $review)
     {
-        $productId = $review->product_id;
+        if ($review->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $review->delete();
 
-        return redirect()->route('products.show', $productId)
-            ->with('success', 'Review deleted successfully!');
+        return redirect()->back()->with('success', 'Review berhasil dihapus');
     }
 }

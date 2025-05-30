@@ -10,6 +10,10 @@ use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\EnergyUsageReportController;
+use App\Http\Controllers\MissionController;
+use App\Http\Controllers\CalculatorController;
+use App\Http\Controllers\EnergySimulationController; # Menambahkan controller simulasi hemat energi
+use App\Http\Controllers\DeviceController;
 
 // Rute untuk pengguna yang belum login (guest)
 Route::middleware('guest')->group(function () {
@@ -29,14 +33,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('maps', MapController::class);
     Route::get('maps/stations/{id}', [MapController::class, 'getStationDetails'])->name('maps.stations.details');
     Route::get('/forum', [ForumController::class, 'index'])->name('forum');
-    Route::get('/notifications', [DashboardController::class, 'getNotifications'])->name('notifications');
     Route::post('/notifications/read', [DashboardController::class, 'markAsRead'])->name('notifications.read');
-    Route::post('/notifications/read-all', function () {
-        auth()->user()->unreadNotifications->markAsRead();
-        return response()->json(['success' => true]);
-    });
-
-
     // Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 
     // CRUD
@@ -65,11 +62,44 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('reviews', ReviewController::class)->except(['index', 'show']);
 
     Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
+    Route::get('/energy-usage', [EnergyUsageReportController::class, 'index'])->name('energy.index');
 
-    Route::get('/energy-report', [EnergyUsageReportController::class, 'index'])->name('energy.index');
     Route::get('/energy/create', [EnergyUsageReportController::class, 'create'])->name('energy.create');
     Route::post('/energy', [EnergyUsageReportController::class, 'store'])->name('energy.store');
     Route::get('/energy/{id}/edit', [EnergyUsageReportController::class, 'edit'])->name('energy.edit');
     Route::put('/energy/{id}', [EnergyUsageReportController::class, 'update'])->name('energy.update');
     Route::delete('/energy/{id}', [EnergyUsageReportController::class, 'destroy'])->name('energy.destroy');
+
+    Route::get('/mission', [MissionController::class, 'index'])->name('mission.index'); 
+    Route::get('/calculator', [CalculatorController::class, 'index'])->name('calculator.index');
+    Route::post('/calculator', [CalculatorController::class, 'store'])->name('calculator.store');
+
+    // Energy Saving Simulation Routes
+    Route::prefix('simulasi-energi')->name('energy.simulation.')->group(function () {
+        Route::get('/', [EnergySimulationController::class, 'index'])->name('index');
+        Route::post('/hitung', [EnergySimulationController::class, 'calculate'])->name('calculate');
+        Route::post('/simpan', [EnergySimulationController::class, 'save'])->name('save');
+        Route::get('/riwayat', [EnergySimulationController::class, 'history'])->name('history');
+        Route::get('/riwayat/{simulation}', [EnergySimulationController::class, 'showDetails'])->name('showDetails');
+        Route::delete('/riwayat/{simulation}', [EnergySimulationController::class, 'delete'])->name('delete');
+    });
+
+    // Device routes
+    Route::resource('devices', DeviceController::class);
+    
+    // Product routes
+    Route::resource('products', ProductController::class);
+
+    // Notification
+    Route::get('/notifications', function () {
+        return auth()->user()->unreadNotifications;
+    });
+
+    Route::post('/notifications/read-all', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return response()->json(['status' => 'done']);
+    });
+    Route::get('/notifications', function () {
+        return response()->json(auth()->user()->notifications);
+    });
 });

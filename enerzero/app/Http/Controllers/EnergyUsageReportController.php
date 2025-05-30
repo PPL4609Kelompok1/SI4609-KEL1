@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Report;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\EnergyAlertNotification;
 
 class EnergyUsageReportController extends Controller
 {
@@ -12,13 +14,22 @@ class EnergyUsageReportController extends Controller
     {
         $reports = Report::all();
 
-        // Ambil 2 data terakhir untuk perbandingan
-        $latest = $reports->sortByDesc('id')->take(2);
-        $current = $latest->first()->usage ?? 0;
-        $previous = $latest->skip(1)->first()->usage ?? 0;
+        // Initialize default values
+        $current = 0;
+        $previous = 0;
+        $percentageChange = 0;
+        $trend = 'neutral';
 
-        $percentageChange = $previous ? number_format((($current - $previous) / $previous) * 100, 2) : 0;
-        $trend = $current >= $previous ? 'increase' : 'decrease';
+        // Only process comparison if we have reports
+        if ($reports->isNotEmpty()) {
+            // Ambil 2 data terakhir untuk perbandingan
+            $latest = $reports->sortByDesc('id')->take(2);
+            $current = $latest->first()->usage ?? 0;
+            $previous = $latest->skip(1)->first()->usage ?? 0;
+
+            $percentageChange = $previous ? number_format((($current - $previous) / $previous) * 100, 2) : 0;
+            $trend = $current >= $previous ? 'increase' : 'decrease';
+        }
 
         $comparisonData = [
             'current_month' => $current,
@@ -49,10 +60,20 @@ class EnergyUsageReportController extends Controller
             'usage' => 'required|integer',
         ]);
 
-        Report::create($request->only(['month', 'usage']));
+        $report = Report::create($request->only(['month', 'usage']));
+
+        // Kirim notifikasi jika penggunaan lebih dari 150
+        if ($report->usage > 500) {
+            Auth::user()->notify(new EnergyAlertNotification([
+                'message' => 'Penggunaan energi kamu melebihi batas normal! Segera lakukan penghematan.',
+                'url' => route('energy.index')  // Arahkan ke halaman laporan
+            ]));
+        }
+
 
         return redirect()->route('energy.index')->with('success', 'Data added successfully!');
     }
+
 
     // Edit data
     public function edit($id)
