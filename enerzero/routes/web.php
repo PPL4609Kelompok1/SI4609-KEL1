@@ -24,6 +24,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/regist', [AuthController::class, 'store'])->name('regist');
 });
 
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Rute untuk pengguna yang sudah login (auth)
@@ -36,34 +37,31 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/notifications/read', [DashboardController::class, 'markAsRead'])->name('notifications.read');
     // Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 
+    Route::get('/forum', [ForumController::class, 'index'])->name('forum');
+    // Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
     // CRUD
     Route::get('/forum/{id}/edit', [ForumController::class, 'edit'])->name('forum.edit');
     Route::put('/forum/{id}', [ForumController::class, 'update'])->name('forum.update');
     Route::delete('/forum/{id}', [ForumController::class, 'destroy'])->name('forum.destroy');
-
     // store data to DB
     Route::post('/forum', [ForumController::class, 'store'])->name('forum.store');
     Route::get('/forum/{id}', [ForumController::class, 'show'])->name('forum.show');
-
     // Untuk reply & like
     Route::post('/forum/{id}/reply', [ForumController::class, 'reply'])->name('forum.reply');
     Route::post('/forum/{id}/like', [ForumController::class, 'like'])->name('forum.like');
 
     Route::get('/produk', [ProductController::class, 'index'])->name('products.index');
     Route::get('/produk/{product}', [ProductController::class, 'show'])->name('products.show');
-
     // Review routes
     Route::post('/products/{product}/review', [ReviewController::class, 'store'])->name('review.store');
     Route::get('/review/{review}', [ReviewController::class, 'show'])->name('review.show');
     Route::put('/review/{review}', [ReviewController::class, 'update'])->name('review.update');
     Route::delete('/review/{review}', [ReviewController::class, 'destroy'])->name('review.destroy');
     Route::resource('products.reviews', ReviewController::class)->shallow();
-
     Route::resource('reviews', ReviewController::class)->except(['index', 'show']);
-
     Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
-    Route::get('/energy-usage', [EnergyUsageReportController::class, 'index'])->name('energy.index');
 
+    Route::get('/energy-usage', [EnergyUsageReportController::class, 'index'])->name('energy.index');
     Route::get('/energy/create', [EnergyUsageReportController::class, 'create'])->name('energy.create');
     Route::post('/energy', [EnergyUsageReportController::class, 'store'])->name('energy.store');
     Route::get('/energy/{id}/edit', [EnergyUsageReportController::class, 'edit'])->name('energy.edit');
@@ -102,4 +100,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', function () {
         return response()->json(auth()->user()->notifications);
     });
+    Route::get('/challenge', [ChallengeController::class, 'index'])->name('challenge.index');
+    Route::get('/challenge/publish', [MissionController::class, 'publishDailyChallenge'])->name('challenge.publish');
 });

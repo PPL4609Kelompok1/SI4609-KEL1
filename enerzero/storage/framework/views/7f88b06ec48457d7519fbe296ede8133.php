@@ -9,7 +9,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <?php echo $__env->yieldPushContent('styles'); ?>
+   
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -35,10 +37,11 @@
 </head>
 <body class="bg-green-100 min-h-screen flex">
     <!-- Sidebar -->
-    <aside class="w-56 bg-white shadow-lg">
+    
+    <aside class="w-56 bg-white shadow-lg fixed top-0 left-0 h-full">
         <div class="flex items-center gap-2 px-4 py-6 border-b border-gray-200">
             <a href="<?php echo e(url('/')); ?>" class="select-none">
-                <img src="Logo Icon.png" alt="Enerzero Icon" class="h-20 w-auto">
+                <img src="<?php echo e(asset('Logo Icon.png')); ?>" alt="Enerzero Icon" class="h-20 w-auto">
             </a>
         </div>
         <nav class="mt-6">
@@ -97,13 +100,20 @@
                         <span>Challenge</span>
                     </a>
                 </li>
+                <li>
+                    <a href="<?php echo e(route('energy.simulation.index')); ?>" class="flex items-center gap-3 px-6 py-3 <?php echo e(request()->routeIs('energy.simulation.*') ? 'sidebar-active' : ''); ?> hover:bg-green-200">
+                        <i class="fas fa-bolt"></i>
+                        <span>Simulasi Hemat Energi</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 p-8 relative overflow-auto">
+    <main class="flex-1 p-8 relative overflow-auto ml-56">
         <?php echo $__env->yieldContent('content'); ?>
     </main>
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html><?php /**PATH C:\Users\chris\OneDrive\Documents\SI4609-KEL1\enerzero\resources\views/layouts/app.blade.php ENDPATH**/ ?>
