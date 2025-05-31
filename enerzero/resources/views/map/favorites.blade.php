@@ -10,15 +10,13 @@
                 <i class="fas fa-map-marked-alt"></i> Back to Map
             </a>
         </div>
-        <div id="favorites-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fadein mt-4 w-full">
-            <!-- Favorites will be loaded here -->
-        </div>
+        {{-- Added px-8 and pb-8 to the container of the cards --}}
+        <div id="favorites-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fadein mt-2 px-8 pb-8">
+            </div>
     </div>
 </div>
 
-<!-- Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <script>
@@ -98,12 +96,12 @@
                 </div>
             </div>
             <div class="px-6 pb-6 flex items-center justify-between gap-2">
-                <button onclick="getDirections(${station.AddressInfo.Latitude}, ${station.AddressInfo.Longitude})" 
+                <button onclick="getDirections(${station.AddressInfo.Latitude}, ${station.AddressInfo.Longitude})"
                         class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition">
                     <i class="fas fa-directions"></i> Get Directions
                 </button>
-                <a href="https://openchargemap.org/site/poi/details/${station.ID}" 
-                   target="_blank" 
+                <a href="https://openchargemap.org/site/poi/details/${station.ID}"
+                   target="_blank"
                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-400 text-blue-700 font-semibold hover:bg-blue-50 transition">
                     <i class="fas fa-info-circle"></i> More Details
                 </a>
@@ -128,21 +126,20 @@
         // Telkom University Bandung coordinates
         const telkomUnivLat = -6.9736;
         const telkomUnivLng = 107.6304;
-        
+
         const origin = `${telkomUnivLat},${telkomUnivLng}`;
         const destination = `${destLat},${destLng}`;
-        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
+        const googleMapsUrl = `https://www.google.com/maps/dir/${origin}/${destination}`; // Corrected Google Maps URL format
         window.open(googleMapsUrl, '_blank');
     }
 </script>
 
 <style>
 @keyframes fadein {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: none; }
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: none; }
 }
 .animate-fadein { animation: fadein 0.7s cubic-bezier(.4,2,.6,1) both; }
 </style>
 
-<!-- Tidak perlu style tambahan, semua pakai Tailwind -->
-@endsection 
+@endsection

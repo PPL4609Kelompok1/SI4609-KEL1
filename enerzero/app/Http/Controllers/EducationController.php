@@ -12,17 +12,17 @@ class EducationController extends Controller
     public function index()
     {
         $categories = [
-            'Rumah Tangga',
+            'Rumah',
             'Energi Terbarukan',
             'Transportasi',
-            'Tempat Kerja',
+            'Kantor',
             'Teknologi'
         ];
 
         $contents = [
             [
                 'type' => 'article',
-                'category' => 'Rumah Tangga',
+                'category' => 'Rumah',
                 'title' => '7 Cara Menghemat Listrik di Rumah yang Perlu Anda Cermati',
                 'description' => 'Pelajari cara-cara praktis untuk menghemat konsumsi listrik di rumah Anda dan mengurangi tagihan bulanan.',
                 'thumbnail' => 'http://localhost:8000/images/hemat_rumah.jpg',
@@ -30,7 +30,7 @@ class EducationController extends Controller
             ],
             [
                 'type' => 'video',
-                'category' => 'Rumah Tangga',
+                'category' => 'Rumah',
                 'title' => 'Catat! Ini 6 Cara Menghemat Tagihan Listrik di Rumah',
                 'description' => 'Video berisi 6 cara praktis untuk menghemat tagihan listrik bulanan di rumah.',
                 'thumbnail' => 'https://img.youtube.com/vi/4QOO93rEaT0/maxresdefault.jpg',
@@ -73,7 +73,7 @@ class EducationController extends Controller
             ],
             [
                 'type' => 'article',
-                'category' => 'Tempat Kerja',
+                'category' => 'Kantor',
                 'title' => 'Tips dan Trik Efisiensi Energi di Kantor, Simak Ulasannya!',
                 'description' => 'Ulasan tentang tips dan trik praktis untuk meningkatkan efisiensi energi di lingkungan kantor.',
                 'thumbnail' => 'http://localhost:8000/images/hemat_kantor.jpg',
@@ -81,7 +81,7 @@ class EducationController extends Controller
             ],
              [
                 'type' => 'video',
-                'category' => 'Tempat Kerja',
+                'category' => 'Kantor',
                 'title' => 'Tips Hemat Energi di Perkantoran',
                 'description' => 'Tips praktis untuk menghemat energi saat bekerja di kantor.',
                 'thumbnail' => 'https://img.youtube.com/vi/TNGgxT36iHs/maxresdefault.jpg',
@@ -115,7 +115,7 @@ class EducationController extends Controller
                 ->toArray();
         }
 
-        return view('education.index', compact('categories', 'contents', 'bookmarkedContents'));
+        return view('Education.index', compact('categories', 'contents', 'bookmarkedContents'));
     }
 
     public function toggleBookmark(Request $request)
@@ -177,7 +177,7 @@ class EducationController extends Controller
         $contents = [
              [
                 'type' => 'article',
-                'category' => 'Rumah Tangga',
+                'category' => 'Rumah',
                 'title' => '7 Cara Menghemat Listrik di Rumah yang Perlu Anda Cermati',
                 'description' => 'Pelajari cara-cara praktis untuk menghemat konsumsi listrik di rumah Anda dan mengurangi tagihan bulanan.',
                 'thumbnail' => 'http://localhost:8000/images/hemat_rumah.jpg',
@@ -185,7 +185,7 @@ class EducationController extends Controller
             ],
             [
                 'type' => 'video',
-                'category' => 'Rumah Tangga',
+                'category' => 'Rumah',
                 'title' => 'Catat! Ini 6 Cara Menghemat Tagihan Listrik di Rumah',
                 'description' => 'Video berisi 6 cara praktis untuk menghemat tagihan listrik bulanan di rumah.',
                 'thumbnail' => 'https://img.youtube.com/vi/4QOO93rEaT0/maxresdefault.jpg',
@@ -228,7 +228,7 @@ class EducationController extends Controller
             ],
             [
                 'type' => 'article',
-                'category' => 'Tempat Kerja',
+                'category' => 'Kantor',
                 'title' => 'Tips dan Trik Efisiensi Energi di Kantor, Simak Ulasannya!',
                 'description' => 'Ulasan tentang tips dan trik praktis untuk meningkatkan efisiensi energi di lingkungan kantor.',
                 'thumbnail' => 'http://localhost:8000/images/hemat_kantor.jpg',
@@ -236,7 +236,7 @@ class EducationController extends Controller
             ],
              [
                 'type' => 'video',
-                'category' => 'Tempat Kerja',
+                'category' => 'Kantor',
                 'title' => 'Tips Hemat Energi di Perkantoran',
                 'description' => 'Tips praktis untuk menghemat energi saat bekerja di kantor.',
                 'thumbnail' => 'https://img.youtube.com/vi/TNGgxT36iHs/maxresdefault.jpg',
@@ -281,7 +281,7 @@ class EducationController extends Controller
         }
 
         // If it's a video, show the detail view (optional, could also redirect to YouTube watch URL)
-        return view('education.show', compact('foundContent'));
+        return view('Education.show', compact('foundContent'));
     }
 
     public function bookmarked()
@@ -292,6 +292,6 @@ class EducationController extends Controller
         // You might need to fetch full content details based on the bookmarked data
         // For now, let's pass the bookmarked data directly to the view
 
-        return view('education.bookmarked', compact('bookmarkedContents'));
+        return view('Education.bookmarked', compact('bookmarkedContents'));
     }
 } 
