@@ -44,58 +44,73 @@
                     + Input Data
                 </a>
             </div>
-            <div class="space-y-4">
-                @foreach($monthlyUsage as $month => $usage)
-                <div>
-                    <div class="flex justify-between text-sm text-gray-600 mb-1">
-                        <span>{{ $month }}</span>
-                        <span>{{ $usage }} kWh</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-green-500 h-2 rounded-full" style="width: {{ ($usage / $maxUsage) * 100 }}%"></div>
-                    </div>
-                </div>
-                @endforeach
+            <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+        @foreach($monthlyUsage as $month => $usage)
+        <div>
+            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                <span>{{ $month }}</span>
+                <span>{{ $usage }} kWh</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-green-500 h-2 rounded-full" style="width: {{ ($usage / $maxUsage) * 100 }}%"></div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+        </div>
+
+       <!-- Usage Analysis Card -->
+<div class="bg-white rounded-lg p-6 shadow-md md:col-span-2">
+    <h2 class="text-xl font-semibold text-green-700 mb-4">Analysis & Recommendations</h2>
+    <div class="space-y-4">
+
+        <!-- Usage Pattern -->
+        <div class="flex items-start gap-4">
+            <div class="p-3 bg-green-100 rounded-lg">
+                <i class="fas fa-lightbulb text-green-600"></i>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-800">Usage Pattern</h3>
+                <p class="text-gray-600">{{ $analysis['usage_pattern'] }}</p>
             </div>
         </div>
 
-        <!-- Usage Analysis Card -->
-        <div class="bg-white rounded-lg p-6 shadow-md md:col-span-2">
-            <h2 class="text-xl font-semibold text-green-700 mb-4">Analysis & Recommendations</h2>
-            <div class="space-y-4">
-                <div class="flex items-start gap-4">
-                    <div class="p-3 bg-green-100 rounded-lg">
-                        <i class="fas fa-lightbulb text-green-600"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Usage Pattern</h3>
-                        <p class="text-gray-600">Your energy consumption shows a slight increase compared to last month. Peak usage typically occurs during evening hours.</p>
-                    </div>
-                </div>
-                <div class="flex items-start gap-4">
-                    <div class="p-3 bg-yellow-100 rounded-lg">
-                        <i class="fas fa-exclamation-triangle text-yellow-600"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Areas of Concern</h3>
-                        <p class="text-gray-600">We've noticed higher than average consumption during off-peak hours, which might indicate standby power waste.</p>
-                    </div>
-                </div>
-                <div class="flex items-start gap-4">
-                    <div class="p-3 bg-blue-100 rounded-lg">
-                        <i class="fas fa-list-check text-blue-600"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Recommendations</h3>
-                        <ul class="list-disc list-inside text-gray-600 space-y-2">
-                            <li>Consider using smart power strips to reduce standby power consumption</li>
-                            <li>Adjust your thermostat settings during peak hours</li>
-                            <li>Replace any remaining incandescent bulbs with LED alternatives</li>
-                        </ul>
-                    </div>
-                </div>
+        <!-- Areas of Concern -->
+        <div class="flex items-start gap-4">
+            <div class="p-3 bg-yellow-100 rounded-lg">
+                <i class="fas fa-exclamation-triangle text-yellow-600"></i>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-800">Areas of Concern</h3>
+                @if(count($analysis['areas_of_concern']) > 0)
+                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                        @foreach($analysis['areas_of_concern'] as $concern)
+                            <li>{{ $concern }}</li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p class="text-gray-600">No significant concerns identified.</p>
+                @endif
             </div>
         </div>
+
+        <!-- Recommendations -->
+        <div class="flex items-start gap-4">
+            <div class="p-3 bg-blue-100 rounded-lg">
+                <i class="fas fa-list-check text-blue-600"></i>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-800">Recommendations</h3>
+                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                    @foreach($analysis['recommendations'] as $rec)
+                        <li>{{ $rec }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+
     </div>
 </div>
+
 @endsection

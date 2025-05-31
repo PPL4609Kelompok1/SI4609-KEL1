@@ -7,7 +7,6 @@ use App\Models\Report;
 
 class EnergyUsageReportController extends Controller
 {
-    // Show all reports
     public function index()
     {
         $reports = Report::all();
@@ -32,16 +31,51 @@ class EnergyUsageReportController extends Controller
             return $group->sum('usage');
         });
 
-        return view('energy-usage.report', compact('reports', 'comparisonData', 'monthlyUsage'));
+        // ==== Analysis Section ====
+
+        $averageUsage = $monthlyUsage->avg();
+        $usagePattern = 'No clear pattern detected';
+        $areasOfConcern = [];
+
+        if ($current > $averageUsage) {
+            $usagePattern = 'Your energy consumption shows an increase compared to the average.';
+        } elseif ($current < $averageUsage) {
+            $usagePattern = 'Your energy consumption is below average this month.';
+        } else {
+            $usagePattern = 'Your energy consumption is stable compared to the average.';
+        }
+
+        foreach ($monthlyUsage as $month => $usage) {
+            if ($usage > ($averageUsage * 1.5)) {
+                $areasOfConcern[] = "High consumption detected in $month.";
+            }
+        }
+
+        // Recommendations
+        $recommendations = [
+            'Consider using smart power strips to reduce standby power consumption.',
+            'Adjust your thermostat settings during peak hours.',
+            'Replace any remaining incandescent bulbs with LED alternatives.'
+        ];
+
+        if ($current > ($averageUsage * 1.5)) {
+            $recommendations[] = 'Investigate appliances that might be consuming too much energy this month.';
+        }
+
+        $analysis = [
+            'usage_pattern' => $usagePattern,
+            'areas_of_concern' => $areasOfConcern,
+            'recommendations' => $recommendations
+        ];
+
+        return view('energy-usage.report', compact('reports', 'comparisonData', 'monthlyUsage', 'analysis'));
     }
 
-    // Form create
     public function create()
     {
         return view('energy-usage.create');
     }
 
-    // Simpan data baru
     public function store(Request $request)
     {
         $request->validate([
@@ -54,14 +88,12 @@ class EnergyUsageReportController extends Controller
         return redirect()->route('energy.index')->with('success', 'Data added successfully!');
     }
 
-    // Edit data
     public function edit($id)
     {
         $report = Report::findOrFail($id);
         return view('energy-usage.edit', compact('report'));
     }
 
-    // Update data
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -75,7 +107,6 @@ class EnergyUsageReportController extends Controller
         return redirect()->route('energy.index')->with('success', 'Data updated successfully!');
     }
 
-    // Hapus data
     public function destroy($id)
     {
         $report = Report::findOrFail($id);
