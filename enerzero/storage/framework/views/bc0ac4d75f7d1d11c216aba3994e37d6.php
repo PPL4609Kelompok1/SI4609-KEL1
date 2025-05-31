@@ -104,6 +104,13 @@
         <!-- Forum -->
         <article class="md:col-span-3 bg-white rounded-lg p-4 shadow-md overflow-auto max-h-[320px] scrollbar-thin">
             <h3 class="text-green-700 font-semibold text-lg mb-4">FORUM</h3>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5e501015cfad64c0658818b168343f5c802cbe68
+>>>>>>> 9e5037327821734ac0dfd1a966040e5b271dee97
             <div class="space-y-4">
             <?php $__currentLoopData = $forums; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $forum): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <a href="<?php echo e(route('forum.show', $forum->id)); ?>" class="block hover:shadow-lg transition">
