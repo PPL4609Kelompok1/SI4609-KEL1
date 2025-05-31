@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MapController;
-use App\Http\Controllers\EducationController;
+
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -15,7 +15,4 @@ Route::get('/map/favorites', [MapController::class, 'favorites'])->name('map.fav
 Route::get('/api/charging-stations', [MapController::class, 'getChargingStations']);
 Route::get('/api/charging-station/{id}', [MapController::class, 'getChargingStation']);
 
-// Education routes
-Route::get('/education', [EducationController::class, 'index'])->name('education.index');
-Route::get('/education/{education:slug}', [EducationController::class, 'show'])->name('education.show');
 
