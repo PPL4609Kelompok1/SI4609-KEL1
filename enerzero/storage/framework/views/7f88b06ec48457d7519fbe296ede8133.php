@@ -53,13 +53,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 <?php echo e(request()->is('calculator') ? 'sidebar-active' : ''); ?> hover:bg-green-200">
+                    <a href="<?php echo e(route('calculator.index')); ?>" class="flex items-center gap-3 px-6 py-3 <?php echo e(request()->is('calculator') ? 'sidebar-active' : ''); ?> hover:bg-green-200">
                         <i class="fas fa-calculator"></i>
                         <span>Calculator</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 <?php echo e(request()->is('education') ? 'sidebar-active' : ''); ?> hover:bg-green-200">
+                    <a href="<?php echo e(route('education.index')); ?>" class="flex items-center gap-3 px-6 py-3 <?php echo e(request()->is('education') ? 'sidebar-active' : ''); ?> hover:bg-green-200">
                         <i class="fas fa-book-open"></i>
                         <span>Education</span>
                     </a>
@@ -83,7 +83,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo e(route('maps.index')); ?>" class="flex items-center gap-3 px-6 py-3 <?php echo e(request()->routeIs('maps.*') ? 'sidebar-active text-green-700 font-semibold' : 'hover:bg-green-200'); ?>">
+                    <a href="<?php echo e(route('map.index')); ?>" class="flex items-center gap-3 px-6 py-3 <?php echo e(request()->routeIs('maps.*') ? 'sidebar-active text-green-700 font-semibold' : 'hover:bg-green-200'); ?>">
                         <i class="fas fa-map"></i>
                         <span>Map</span>
                     </a>

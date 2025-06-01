@@ -50,9 +50,11 @@
     </section>
 
     <!-- Main Cards Wrapper -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
+    {{-- <section class="grid grid-cols-1 md:grid-cols-3 gap-6"> --}}
+    <section class="grid grid-cols-1 md:grid-cols-5 gap-6">
+    
         <!-- Monthly Comparison Card -->
+        {{-- <article class="col-span-2 bg-white rounded-lg p-6 shadow-md"> --}}
         <article class="col-span-2 bg-white rounded-lg p-6 shadow-md">
             <h2 class="text-xl font-semibold text-green-700 mb-4">Monthly Comparison</h2>
             <div class="flex items-center justify-between mb-4">
@@ -69,14 +71,17 @@
                 <i class="fas fa-{{ $comparisonData['trend'] === 'increase' ? 'arrow-up' : 'arrow-down' }}"></i>
                 <span class="font-semibold">{{ $comparisonData['percentage_change'] }}% {{ $comparisonData['trend'] }}</span>
                 <span class="text-gray-600">from last month</span>
-                <a href="/energy-usage" class="mt-4 bg-yellow-400 text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300">
+            </div>
+            <div class="flex justify-start mt-4">
+                <a href="/energy-usage" class="bg-yellow-400 text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300">
                     See Detail
                 </a>
             </div>
         </article>
 
         <!-- Education Card -->
-        <article class="bg-white rounded-lg p-6 shadow-md flex flex-col md:flex-row md:items-center md:gap-6">
+        {{-- <article class="bg-white rounded-lg p-6 shadow-md flex flex-col md:flex-row md:items-center md:gap-6"> --}}
+        <article class="col-span-3 bg-white rounded-lg p-6 shadow-md flex flex-col md:flex-row md:items-center md:gap-6">
             <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80" alt="Solar Panels" class="rounded-lg w-full md:w-1/2 object-cover mb-4 md:mb-0" />
             <div class="flex-1">
                 <h2 class="text-green-700 font-semibold text-lg mb-2 uppercase">Education</h2>
@@ -95,7 +100,7 @@
     </section>
 
     <!-- Bottom Section -->
-    <section class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+    <section class="mt-6 grid grid-cols-1 md:grid-cols-5 gap-6">
 
         <!-- Forum -->
         <article class="md:col-span-3 bg-white rounded-lg p-4 shadow-md overflow-auto max-h-[320px] scrollbar-thin">
@@ -126,7 +131,7 @@
         </article>
 
         <!-- Products -->
-        <div class="overflow-hidden bg-white rounded-lg p-4 shadow-md">
+        <div class="col-span-2 overflow-hidden bg-white rounded-lg p-4 shadow-md">
             <h3 class="text-green-700 font-semibold text-lg mb-4 uppercase">PRODUCTS</h3>
             <div class="flex gap-4 transition-transform duration-700 ease-in-out" id="product-slider">
                 @foreach ($products as $index => $product)

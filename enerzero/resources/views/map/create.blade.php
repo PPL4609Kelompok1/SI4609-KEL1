@@ -8,7 +8,7 @@
             <div class="px-6 py-4 bg-gray-50 border-b border-gray-100">
                 <div class="flex justify-between items-center">
                     <h1 class="text-xl font-semibold text-gray-800">Add New Favorite Location</h1>
-                    <a href="{{ route('maps.index') }}" class="text-blue-500 hover:text-blue-700 flex items-center">
+                    <a href="{{ route('map.index') }}" class="text-blue-500 hover:text-blue-700 flex items-center">
                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -19,7 +19,7 @@
 
             <!-- Content -->
             <div class="p-6">
-                <form action="{{ route('maps.store') }}" method="POST" class="space-y-6">
+                <form action="{{ route('map.store') }}" method="POST" class="space-y-6">
                     @csrf
                     
                     <!-- Location Details -->
@@ -92,7 +92,7 @@
 
                     <!-- Action Buttons -->
                     <div class="flex justify-end space-x-3 pt-4 border-t">
-                        <a href="{{ route('maps.index') }}" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        <a href="{{ route('map.index') }}" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                             Cancel
                         </a>
                         <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">

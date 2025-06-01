@@ -14,6 +14,7 @@ use App\Http\Controllers\MissionController;
 use App\Http\Controllers\CalculatorController;
 use App\Http\Controllers\EnergySimulationController; # Menambahkan controller simulasi hemat energi
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\EducationController;
 
 // Rute untuk pengguna yang belum login (guest)
 Route::middleware('guest')->group(function () {
@@ -31,11 +32,19 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/leaderboard/{category?}', [LeaderboardController::class, 'showUserRank'])->name('leaderboard.index');
-    Route::resource('maps', MapController::class);
-    Route::get('maps/stations/{id}', [MapController::class, 'getStationDetails'])->name('maps.stations.details');
-    Route::get('/forum', [ForumController::class, 'index'])->name('forum');
-    Route::post('/notifications/read', [DashboardController::class, 'markAsRead'])->name('notifications.read');
-    // Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+    // Route::resource('map', MapController::class);
+    Route::get('/map', [MapController::class, 'index'])->name('map.index');
+    // Route::post('/map/favorites', [MapController::class, 'addToFavorites'])->name('map.favorites');
+    Route::get('/map/favorites', [MapController::class, 'favorites'])->name('map.favorites');
+    Route::get('map/stations/{id}', [MapController::class, 'getStationDetails'])->name('map.stations.details');
+    Route::get('/api/charging-stations', [MapController::class, 'getChargingStations']);
+    Route::get('/api/charging-station/{id}', [MapController::class, 'getChargingStation']);
+
+    Route::get('/education', [EducationController::class, 'index'])->name('education.index');
+    Route::get('/education/bookmarked', [EducationController::class, 'bookmarked'])->name('education.bookmarked');
+    Route::get('/education/{category}/{title}', [EducationController::class, 'show'])->name('education.show');
+    Route::post('/education/bookmark', [EducationController::class, 'toggleBookmark'])->name('education.bookmark');
+    
 
     Route::get('/forum', [ForumController::class, 'index'])->name('forum');
     // Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
