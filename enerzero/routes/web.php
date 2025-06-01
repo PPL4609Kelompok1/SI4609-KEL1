@@ -86,8 +86,17 @@ Route::middleware(['auth'])->group(function () {
     // Product routes
     Route::resource('products', ProductController::class);
 
-    // Rute untuk profil pengguna (PENAMBAHAN BARU)
+    // Rute untuk profil pengguna
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 });
+
+// Rute Reset Password Bawaan Laravel (Ditempatkan di luar middleware 'auth' karena diakses saat belum login)
+Auth::routes([
+    'register' => false, // Menonaktifkan rute registrasi bawaan Laravel
+    'verify' => false,   // Menonaktifkan rute verifikasi email bawaan Laravel
+    'login' => false,    // Menonaktifkan rute login bawaan Laravel
+    'logout' => false,   // Menonaktifkan rute logout bawaan Laravel
+    'reset' => true      // Mengaktifkan hanya rute reset password
+]);
