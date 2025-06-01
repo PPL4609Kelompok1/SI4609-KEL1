@@ -6,7 +6,7 @@
 <div class="space-y-6">
 
     <!-- Header -->
-    <header class="mb-6 flex items-center justify-between">
+    <header class="mb-6 flex items-center justify-between relative">
         <div class="flex items-center gap-2">
             <i class="fas fa-desktop text-2xl text-green-700"></i>
             <h1 class="text-3xl font-bold text-green-900">Dashboard</h1>
@@ -14,19 +14,18 @@
         <div class="flex items-center gap-4 text-gray-600">
             <button title="Notifications" id="notif-button" class="hover:text-green-700 relative">
                 <i class="fas fa-bell fa-lg"></i>
-                @if($notification)
-                    <span class="absolute top-0 right-0 block w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-                    <span class="absolute top-0 right-0 block w-2 h-2 bg-red-500 rounded-full"></span>
-                @endif
+                <span id="notif-badge" class="absolute top-0 right-0 block w-2 h-2 bg-red-500 rounded-full hidden"></span>
             </button>
-            @if($notification)
-            <div id="notif-dropdown" class="absolute right-20 mt-20 w-64 bg-white rounded-md shadow-lg hidden z-50">
-                <div class="p-4 text-sm text-gray-800">
-                    <p class="font-bold mb-2">Notifikasi Penting</p>
-                    <p><i class="fas fa-exclamation-circle text-yellow-500 mr-2"></i>{{ $notification['message'] }}</p>
+            <!-- Dropdown Notifikasi -->
+            <div id="notif-dropdown" class="absolute right-0 top-full mt-2 w-72 max-h-80 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden hidden z-50 transition-all duration-300 ease-in-out">
+                <div class="p-4 text-sm text-gray-800 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                    <p class="font-bold mb-2 text-green-700">Notifikasi</p>
+                    <ul id="notif-list" class="space-y-3 text-sm">
+                        <li class="text-gray-400 text-center">Memuat notifikasi...</li>
+                    </ul>
                 </div>
             </div>
-            @endif
+
             <button title="Settings" class="hover:text-green-700" id="settings-button">
                 <i class="fas fa-cog fa-lg"></i>
             </button>
@@ -157,49 +156,119 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>document.addEventListener('DOMContentLoaded', function() {
-
-    const button = document.getElementById('settings-button');
-    const menu = document.getElementById('dropdown-menu');
-
-    button.addEventListener('click', function(event) {
-        event.stopPropagation();
-        menu.classList.toggle('hidden');
-    });
-    document.addEventListener('click', function(event) {
-        if (!menu.contains(event.target) && !button.contains(event.target)) {
-            menu.classList.add('hidden');
-        }
-    });
+<script>
+document.addEventListener('DOMContentLoaded', function () {
     const notifButton = document.getElementById('notif-button');
     const notifDropdown = document.getElementById('notif-dropdown');
     const notifList = document.getElementById('notif-list');
     const notifBadge = document.getElementById('notif-badge');
 
-    notifButton?.addEventListener('click', function(event) {
+    // ➤ Tampilkan badge saat halaman dimuat (panggil saat pertama kali)
+    checkUnreadNotifications();
+
+    notifButton?.addEventListener('click', function (event) {
         event.stopPropagation();
         notifDropdown?.classList.toggle('hidden');
+
+        // Tampilkan loading dulu
+        notifList.innerHTML = '<li class="text-gray-400 text-center">Memuat notifikasi...</li>';
+
+        fetch('/notifications')
+            .then(res => res.json())
+            .then(data => {
+                notifList.innerHTML = '';
+                let unreadCount = 0;
+
+                if (data.length === 0) {
+                    notifList.innerHTML = '<li class="text-gray-400 text-center">Tidak ada notifikasi baru</li>';
+                    notifBadge?.classList.add('hidden');
+                    return;
+                }
+
+                data.forEach(notif => {
+                    const li = document.createElement('li');
+                    li.className = 'cursor-pointer px-3 py-2 rounded hover:bg-gray-100 transition';
+                    if (!notif.read_at) {
+                        li.classList.add('bg-gray-100'); // notifikasi belum dibaca
+                        unreadCount++;
+                    }
+                    li.setAttribute('data-id', notif.id);
+                    let url = '/'; // default
+                    if (notif.type === 'energy_alert') {
+                        url = '/energy-report';
+                    } else if (notif.type === 'daily_challenge') {
+                        url = '/challenge';
+                    } else if (notif.data.url) {
+                        url = notif.data.url;
+                    }
+
+                    li.setAttribute('data-url', url);
+
+                    li.innerHTML = `<span>${notif.data.message}</span>`;
+                    notifList.appendChild(li);
+
+                });
+
+                // Sembunyikan badge setelah dibuka
+                notifBadge?.classList.add('hidden');
+
+                // Tandai sebagai dibaca
+                fetch('/notifications/read-all', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                });
+            });
     });
 
-    document.addEventListener('click', function(event) {
+    // Tutup dropdown jika klik di luar
+    document.addEventListener('click', function (event) {
         if (!notifDropdown?.contains(event.target) && !notifButton?.contains(event.target)) {
             notifDropdown?.classList.add('hidden');
         }
     });
 
-    const slider = document.getElementById('product-slider');
-    const totalSlides = slider.children.length;
-    let current = 0;
-
-    function showSlide(index) {
-        const percentage = -(index * 100);
-        slider.style.transform = `translateX(${percentage}%)`;
+    // ➤ Cek apakah ada notifikasi yang belum dibaca (untuk badge)
+    function checkUnreadNotifications() {
+        fetch('/notifications')
+            .then(res => res.json())
+            .then(data => {
+                const unread = data.filter(n => n.read_at === null);
+                if (unread.length > 0) {
+                    notifBadge?.classList.remove('hidden');
+                } else {
+                    notifBadge?.classList.add('hidden');
+                }
+            });
     }
-    setInterval(() => {
-        current = (current + 1) % totalSlides;
-        showSlide(current);
-    }, 3000);
+
+    notifList.addEventListener('click', function (e) {
+        const li = e.target.closest('li[data-id]');
+        if (!li) return;
+
+        const id = li.getAttribute('data-id');
+        const url = li.getAttribute('data-url');
+
+        // tandai sebagai dibaca (hilangkan abu-abu)
+        li.classList.remove('bg-gray-100');
+        li.classList.add('bg-white');
+
+        fetch('/notifications/read', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ id })
+        }).then(() => {
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
 });
 </script>
+
 @endsection

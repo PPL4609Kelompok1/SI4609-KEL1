@@ -47,32 +47,6 @@ class DashboardController extends Controller
         return view('dashboard', compact('username', 'reports', 'comparisonData', 'forums', 'products', 'notification'));
 
     }
-  
-    public function getNotifications()
-    {
-        $notifications = [
-            [
-                'id' => 1,
-                'data' => ['message' => 'Penggunaan energi kamu melebihi batas normal! Segera lakukan penghematan.'],
-                'read_at' => null,
-                'type' => 'energy_alert'
-            ],
-            [
-                'id' => 2,
-                'data' => ['message' => 'Jangan lupa ikuti misi harian hari ini untuk mendapatkan poin tambahan!'],
-                'read_at' => null,
-                'type' => 'daily_challenge'
-            ],
-            [
-                'id' => 3,
-                'data' => ['message' => 'Artikel baru telah terbit: "Cara Cerdas Menghemat Energi di Rumah". Yuk baca sekarang!'],
-                'read_at' => null,
-                'type' => 'new_article'
-            ],
-        ];
-
-        return response()->json($notifications);
-    }
 
     public function markAsRead(Request $request)
     {

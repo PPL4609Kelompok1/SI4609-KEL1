@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Report;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\DailyChallengeNotification;
+use App\Models\UserMission;
+
 
 class MissionController extends Controller
 {
@@ -65,7 +69,7 @@ class MissionController extends Controller
 
         // Debug: uncomment baris ini untuk debugging
         // dd($reports->toArray(), $comparisonData);
-
+        
         // Kirim ke view
         return view('mission.mission', compact('comparisonData', 'monthlyUsage'));
     }
@@ -202,5 +206,17 @@ class MissionController extends Controller
                 'message' => 'Error fetching challenges: ' . $e->getMessage()
             ], 500);
         }
+    }
+    public function publishDailyChallenge()
+    {
+        $users = User::all();
+
+        foreach ($users as $user) {
+            $user->notify(new DailyChallengeNotification(
+                "Jangan lupa ikuti misi harian hari ini! Tantangan menunggumu."
+            ));
+        }
+
+        return redirect()->route('challenge.index')->with('success', 'Tantangan harian telah dikirim ke semua user.');
     }
 }

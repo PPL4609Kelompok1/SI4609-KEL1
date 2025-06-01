@@ -96,4 +96,19 @@ Route::middleware(['auth'])->group(function () {
     
     // Product routes
     Route::resource('products', ProductController::class);
+
+    // Notification
+    Route::get('/notifications', function () {
+        return auth()->user()->unreadNotifications;
+    });
+
+    Route::post('/notifications/read-all', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return response()->json(['status' => 'done']);
+    });
+    Route::get('/notifications', function () {
+        return response()->json(auth()->user()->notifications);
+    });
+    Route::get('/challenge', [ChallengeController::class, 'index'])->name('challenge.index');
+    Route::get('/challenge/publish', [MissionController::class, 'publishDailyChallenge'])->name('challenge.publish');
 });

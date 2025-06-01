@@ -8,10 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     @stack('styles')
-   
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -44,7 +44,6 @@
                 <img src="{{ asset('Logo Icon.png') }}" alt="Enerzero Icon" class="h-20 w-auto">
             </a>
         </div>
-        <nav class="mt-6">
             <ul>
                 <li>
                     <a href="/dashboard" class="flex items-center gap-3 px-6 py-3 {{ request()->is('dashboard') ? 'sidebar-active' : '' }} hover:bg-green-200">
@@ -98,8 +97,6 @@
                     <a href="/mission" class="flex items-center gap-3 px-6 py-3 {{ request()->is('challenge') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-trophy"></i>
                         <span>Challenge</span>
-                    </a>
-                </li>
                 <li>
                     <a href="{{ route('energy.simulation.index') }}" class="flex items-center gap-3 px-6 py-3 {{ request()->routeIs('energy.simulation.*') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-bolt"></i>
@@ -107,7 +104,6 @@
                     </a>
                 </li>
             </ul>
-        </nav>
     </aside>
 
     <!-- Main Content -->
