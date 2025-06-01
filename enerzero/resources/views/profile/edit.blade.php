@@ -10,12 +10,12 @@
 
         {{-- Pesan sukses/error --}}
         @if (session('success'))
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded" role="alert">
                 <p>{{ session('success') }}</p>
             </div>
         @endif
         @if ($errors->any())
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded" role="alert">
                 <p class="font-bold">Ada kesalahan:</p>
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -30,8 +30,8 @@
             @method('PUT') {{-- Penting: Gunakan method spoofing untuk PUT request --}}
 
             <div class="mb-6">
-                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username :</label> {{-- UBAH LABEL FOR INI --}}
-                <input type="text" name="username" id="username" value="{{ old('username', $user->username) }}" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500 @error('username') border-red-500 @enderror" required> {{-- UBAH name="username" DAN value="{{ old('username', $user->username) }}" --}}
+                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+                <input type="text" name="username" id="username" value="{{ old('username', $user->username) }}" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500 @error('username') border-red-500 @enderror" required>
                 @error('username')
                     <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
                 @enderror
@@ -45,9 +45,9 @@
                 @enderror
             </div>
 
-            {{-- Tambahkan field lain yang ingin Anda izinkan untuk diubah --}}
-            {{-- Contoh untuk password (jika diaktifkan di controller): --}}
-            {{--
+            {{-- FIELD ALAMAT & NOMOR TELEPON TELAH DIHAPUS DARI SINI --}}
+
+            {{-- FIELD PASSWORD --}}
             <div class="mb-6">
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password Baru (opsional):</label>
                 <input type="password" name="password" id="password" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500 @error('password') border-red-500 @enderror">
@@ -59,7 +59,7 @@
                 <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Konfirmasi Password Baru:</label>
                 <input type="password" name="password_confirmation" id="password_confirmation" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500">
             </div>
-            --}}
+            {{-- AKHIR FIELD PASSWORD --}}
 
             <div class="flex items-center justify-between">
                 <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
