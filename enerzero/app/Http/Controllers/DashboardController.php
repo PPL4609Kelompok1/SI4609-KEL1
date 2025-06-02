@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $username = Auth::user()->username;
 
         // Ambil semua report usage
-        $reports = Report::where('username', $username)->get();
+        $reports = Report::all();
 
         // Ambil 2 data terakhir untuk perbandingan
         $latest = $reports->sortByDesc('id')->take(2);
@@ -45,5 +45,11 @@ class DashboardController extends Controller
         ];
 
         return view('dashboard', compact('username', 'reports', 'comparisonData', 'forums', 'products', 'notification'));
+    }
+
+    public function markAsRead(Request $request)
+    {
+        $id = $request->input('id');
+        return response()->json(['status' => 'success', 'id' => $id]);
     }
 }

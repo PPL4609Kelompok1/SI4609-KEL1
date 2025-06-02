@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model
 {
-    protected $fillable = ['username','month', 'usage'];
+    protected $fillable = ['month', 'usage'];
 
     // Cast usage sebagai float, just in case
     protected $casts = [
@@ -33,9 +33,3 @@ class Report extends Model
     {
         return $query->where('usage', '<', 50);
     }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-}

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Forum;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ForumReply;
 use App\Models\ForumLike;
@@ -10,6 +11,13 @@ use Illuminate\Support\Facades\Auth;
 
 class ForumController extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+
+    
     // Menampilkan semua forum
     public function index(Request $request)
     {
@@ -54,12 +62,24 @@ class ForumController extends Controller
     public function edit($id)
     {
         $forum = Forum::findOrFail($id);
+        // cek user access
+        if ($forum->username !== Auth::user()->username) {
+            return back()->with('error', 'Kamu tidak memiliki izin untuk mengakses aksi ini.');
+        }
+        
         return view('forum.edit', compact('forum'));
     }
 
     // Update data forum
     public function update(Request $request, $id)
     {
+        $forum = Forum::findOrFail($id);
+        // cek user access
+        if ($forum->username !== Auth::user()->username) {
+            return back()->with('error', 'Kamu tidak memiliki izin untuk mengakses aksi ini.');
+        }
+        
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -75,6 +95,11 @@ class ForumController extends Controller
     public function destroy($id)
     {
         $forum = Forum::findOrFail($id);
+        // cek user access
+        if ($forum->username !== Auth::user()->username) {
+            return back()->with('error', 'Kamu tidak memiliki izin untuk mengakses aksi ini.');
+        }
+        
         $forum->delete();
 
         return redirect()->route('forum', $forum->id)->with('success', 'Forum berhasil dihapus!');
