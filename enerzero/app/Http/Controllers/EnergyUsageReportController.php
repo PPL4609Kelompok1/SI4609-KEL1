@@ -74,7 +74,6 @@ class EnergyUsageReportController extends Controller
         return redirect()->route('energy.index')->with('success', 'Data added successfully!');
     }
 
-
     // Edit data
     public function edit($id)
     {

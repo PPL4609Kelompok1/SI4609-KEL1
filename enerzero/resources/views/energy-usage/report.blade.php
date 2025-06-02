@@ -40,6 +40,7 @@
                     <p class="text-gray-600">No data available yet. Start by adding your first energy usage report!</p>
                 </div>
             @endif
+
         </div>
 
         <!-- Usage Breakdown Card -->

@@ -33,4 +33,3 @@ class Report extends Model
     {
         return $query->where('usage', '<', 50);
     }
-}
