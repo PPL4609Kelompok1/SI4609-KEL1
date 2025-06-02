@@ -98,7 +98,11 @@
                         <i class="fas fa-trophy"></i>
                         <span>Challenge</span>
                 <li>
+<<<<<<< HEAD
                     <a href="{{ route('energy_simulation.index') }}" class="flex items-center gap-3 px-6 py-3 {{ request()->routeIs('energy.simulation.*') ? 'sidebar-active' : '' }} hover:bg-green-200">
+=======
+                    <a href="{{ route('energy.simulation.index') }}" class="flex items-center gap-3 px-6 py-3 {{ request()->routeIs('energy.simulation.*') ? 'sidebar-active' : '' }} hover:bg-green-200">
+>>>>>>> 0aaea619ca45a3255ca0927ed2b37763891b4dd1
                         <i class="fas fa-bolt"></i>
                         <span>Simulasi Hemat Energi</span>
                     </a>

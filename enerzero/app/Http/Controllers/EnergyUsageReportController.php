@@ -69,11 +69,18 @@ class EnergyUsageReportController extends Controller
                 'url' => route('energy.index')  // Arahkan ke halaman laporan
             ]));
         }
+<<<<<<< HEAD
 
 
         return redirect()->route('energy.index')->with('success', 'Data added successfully!');
     }
 
+=======
+
+
+        return redirect()->route('energy.index')->with('success', 'Data added successfully!');
+    }
+>>>>>>> 0aaea619ca45a3255ca0927ed2b37763891b4dd1
 
     // Edit data
     public function edit($id)

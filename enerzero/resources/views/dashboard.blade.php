@@ -158,6 +158,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+<<<<<<< HEAD
     const button = document.getElementById('settings-button');
     const menu = document.getElementById('dropdown-menu');
 
@@ -172,6 +173,8 @@ document.addEventListener('DOMContentLoaded', function () {
             menu.classList.add('hidden');
         }
     });
+=======
+>>>>>>> 0aaea619ca45a3255ca0927ed2b37763891b4dd1
     const notifButton = document.getElementById('notif-button');
     const notifDropdown = document.getElementById('notif-dropdown');
     const notifList = document.getElementById('notif-list');
@@ -256,6 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     notifBadge?.classList.add('hidden');
                 }
             });
+<<<<<<< HEAD
     }
 
     notifList.addEventListener('click', function (e) {
@@ -290,12 +294,34 @@ document.addEventListener('DOMContentLoaded', function () {
     function showSlide(index) {
         const percentage = -(index * 100);
         slider.style.transform = `translateX(${percentage}%)`;
+=======
+>>>>>>> 0aaea619ca45a3255ca0927ed2b37763891b4dd1
     }
 
-    setInterval(() => {
-        current = (current + 1) % totalSlides;
-        showSlide(current);
-    }, 3000);
+    notifList.addEventListener('click', function (e) {
+        const li = e.target.closest('li[data-id]');
+        if (!li) return;
+
+        const id = li.getAttribute('data-id');
+        const url = li.getAttribute('data-url');
+
+        // tandai sebagai dibaca (hilangkan abu-abu)
+        li.classList.remove('bg-gray-100');
+        li.classList.add('bg-white');
+
+        fetch('/notifications/read', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ id })
+        }).then(() => {
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
 });
 </script>
 

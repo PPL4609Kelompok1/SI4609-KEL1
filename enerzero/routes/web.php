@@ -82,7 +82,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/calculator', [CalculatorController::class, 'store'])->name('calculator.store');
 
     // Energy Saving Simulation Routes
+<<<<<<< HEAD
     Route::prefix('simulasi-energi')->name('energy_simulation.')->group(function () {
+=======
+    Route::prefix('simulasi-energi')->name('energy.simulation.')->group(function () {
+>>>>>>> 0aaea619ca45a3255ca0927ed2b37763891b4dd1
         Route::get('/', [EnergySimulationController::class, 'index'])->name('index');
         Route::post('/hitung', [EnergySimulationController::class, 'calculate'])->name('calculate');
         Route::post('/simpan', [EnergySimulationController::class, 'save'])->name('save');
@@ -109,6 +113,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', function () {
         return response()->json(auth()->user()->notifications);
     });
+<<<<<<< HEAD
     Route::get('/challenge', [MissionController::class, 'index'])->name('challenge.index');
+=======
+    Route::get('/challenge', [ChallengeController::class, 'index'])->name('challenge.index');
+>>>>>>> 0aaea619ca45a3255ca0927ed2b37763891b4dd1
     Route::get('/challenge/publish', [MissionController::class, 'publishDailyChallenge'])->name('challenge.publish');
 });

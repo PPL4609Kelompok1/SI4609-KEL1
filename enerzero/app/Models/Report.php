@@ -32,5 +32,9 @@ class Report extends Model
     public function scopeReallyGood($query)
     {
         return $query->where('usage', '<', 50);
+<<<<<<< HEAD
     }
 }
+=======
+    }
+>>>>>>> 0aaea619ca45a3255ca0927ed2b37763891b4dd1
