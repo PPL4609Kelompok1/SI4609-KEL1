@@ -45,7 +45,6 @@ class DashboardController extends Controller
         ];
 
         return view('dashboard', compact('username', 'reports', 'comparisonData', 'forums', 'products', 'notification'));
-
     }
 
     public function markAsRead(Request $request)
