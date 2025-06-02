@@ -5,25 +5,33 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\EnergyAlertNotification;
 
 class EnergyUsageReportController extends Controller
 {
     // Show all reports
     public function index()
     {
-        $username = Auth::user()->username;
-        $reports = Report::where('username', $username)->get();
+        $reports = Report::all();
 
-        // Ambil 2 data terakhir untuk perbandingan
-        $latest = $reports->sortByDesc('id')->take(2);
-        $current = $latest->first()->usage ?? 0;
-        $previous = $latest->skip(1)->first()->usage ?? 0;
+        // Initialize default values
+        $current = 0;
+        $previous = 0;
+        $percentageChange = 0;
+        $trend = 'neutral';
 
-        $percentageChange = $previous ? number_format((($current - $previous) / $previous) * 100, 2) : 0;
-        $trend = $current >= $previous ? 'increase' : 'decrease';
+        // Only process comparison if we have reports
+        if ($reports->isNotEmpty()) {
+            // Ambil 2 data terakhir untuk perbandingan
+            $latest = $reports->sortByDesc('id')->take(2);
+            $current = $latest->first()->usage ?? 0;
+            $previous = $latest->skip(1)->first()->usage ?? 0;
+
+            $percentageChange = $previous ? number_format((($current - $previous) / $previous) * 100, 2) : 0;
+            $trend = $current >= $previous ? 'increase' : 'decrease';
+        }
 
         $comparisonData = [
-            'username' => $username,
             'current_month' => $current,
             'previous_month' => $previous,
             'percentage_change' => $percentageChange,
@@ -45,23 +53,27 @@ class EnergyUsageReportController extends Controller
     }
 
     // Simpan data baru
-   public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'month' => 'required|string',
-            'usage' => 'required|numeric|min:0',
+            'usage' => 'required|integer',
         ]);
 
-        $username = Auth::user()->username;
+        $report = Report::create($request->only(['month', 'usage']));
 
-        Report::create([
-            'username' => $username,
-            'month' => $request->month,
-            'usage' => $request->usage,
-        ]);
+        // Kirim notifikasi jika penggunaan lebih dari 150
+        if ($report->usage > 500) {
+            Auth::user()->notify(new EnergyAlertNotification([
+                'message' => 'Penggunaan energi kamu melebihi batas normal! Segera lakukan penghematan.',
+                'url' => route('energy.index')  // Arahkan ke halaman laporan
+            ]));
+        }
 
-        return redirect()->route('energy.index')->with('success', 'Data berhasil disimpan!');
-    }   
+
+        return redirect()->route('energy.index')->with('success', 'Data added successfully!');
+    }
+
 
     // Edit data
     public function edit($id)

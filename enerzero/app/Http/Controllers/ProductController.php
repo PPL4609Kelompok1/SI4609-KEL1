@@ -5,9 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Review;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $request)
     {
         $query = Product::query()->with('reviews');
@@ -34,6 +41,8 @@ class ProductController extends Controller
     public function show(Product $product, Request $request)
     {
         $product->load('reviews');
+
+        $user = Auth::user();
 
         // Dummy data for recommendations
         $dummyProducts = [
@@ -73,8 +82,7 @@ class ProductController extends Controller
         $recommendations = collect($dummyProducts)->map(function($product) {
             return (object) $product;
         });
-
-        return view('products.show', compact('product', 'recommendations'));
+        return view('products.show', compact('product', 'recommendations', 'user'));
     }
 
     public function store(Request $request)
