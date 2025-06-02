@@ -23,6 +23,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'authenticate']);
     Route::view('/regist', 'auth.regist')->name('regist');
     Route::post('/regist', [AuthController::class, 'store'])->name('regist');
+
+    // Rute untuk verifikasi perubahan email (DITEMPATKAN DI SINI AGAR BISA DIAKSES GUEST)
+    Route::get('/verify-email-change/{token}', [UserProfileController::class, 'verifyEmailChange'])->name('verify.email.change');
 });
 
 

@@ -45,7 +45,6 @@
                 @enderror
             </div>
 
-            {{-- FIELD ALAMAT & NOMOR TELEPON TELAH DIHAPUS DARI SINI --}}
 
             {{-- FIELD PASSWORD --}}
             <div class="mb-6">
