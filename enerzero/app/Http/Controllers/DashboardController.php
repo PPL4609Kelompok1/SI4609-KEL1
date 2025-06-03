@@ -8,7 +8,6 @@ use App\Models\Forum;
 use App\Models\Product;
 use App\Models\Report;
 
-
 class DashboardController extends Controller
 {
     public function index()
@@ -40,14 +39,12 @@ class DashboardController extends Controller
 
         $products = Product::all();
 
-
         $notification = [
             'type' => 'warning',
             'message' => 'Pola konsumsi energi kamu menunjukkan tren yang kurang baik. Coba evaluasi penggunaan listrik harianmu.'
         ];
 
         return view('dashboard', compact('username', 'reports', 'comparisonData', 'forums', 'products', 'notification'));
-
     }
 
     public function markAsRead(Request $request)

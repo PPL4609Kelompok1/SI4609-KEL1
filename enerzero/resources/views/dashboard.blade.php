@@ -162,28 +162,8 @@
 
 </div>
 
-<<<<<<< HEAD
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-=======
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>document.addEventListener('DOMContentLoaded', function() {
-
-    const button = document.getElementById('settings-button');
-    const menu = document.getElementById('dropdown-menu');
-
-    button.addEventListener('click', function(event) {
-        event.stopPropagation();
-        menu.classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', function(event) {
-        if (!menu.contains(event.target) && !button.contains(event.target)) {
-            menu.classList.add('hidden');
-        }
-    });
-
->>>>>>> 93564f32dd3e516f5f5e9bea5b1382ff470a5c53
     const notifButton = document.getElementById('notif-button');
     const notifDropdown = document.getElementById('notif-dropdown');
     const notifList = document.getElementById('notif-list');
@@ -296,5 +276,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
 
 @endsection
