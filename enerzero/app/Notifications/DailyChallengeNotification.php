@@ -1,15 +1,14 @@
 <?php
 
+// app/Notifications/DailyChallengeNotification.php
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class DailyChallengeNotification extends Notification
 {
-    use Queueable;
-
-    protected $message;
+    public $message;
 
     public function __construct($message = 'Jangan lupa ikuti misi harian hari ini untuk mendapatkan poin tambahan!')
     {
@@ -18,15 +17,23 @@ class DailyChallengeNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+        return ['mail', 'database']; // Email dan in-app notification
+    }
+
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+            ->subject('Jangan Lewatkan Misi Harianmu!')
+            ->line($this->message)
+            ->action('Ikuti Misi', url('/missions/daily'))
+            ->line('Jangan sampai terlewat ya!');
     }
 
     public function toArray($notifiable)
     {
         return [
             'message' => $this->message,
-            'url' => route('challenge.index') // arahkan ke halaman tantangan
+            'url' => url('/missions/daily')
         ];
     }
-
 }

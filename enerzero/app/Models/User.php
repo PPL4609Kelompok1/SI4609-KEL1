@@ -63,4 +63,8 @@ class User extends Authenticatable
     {
         return $this->username;
     }
+    public function userMissions()
+    {
+        return $this->hasMany(UserMission::class);
+    }
 }

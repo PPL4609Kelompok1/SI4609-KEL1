@@ -97,7 +97,7 @@
                     <a href="/mission" class="flex items-center gap-3 px-6 py-3 {{ request()->is('challenge') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-trophy"></i>
                         <span>Challenge</span>
-                <li>
+                </li>
                     <a href="{{ route('energy.simulation.index') }}" class="flex items-center gap-3 px-6 py-3 {{ request()->routeIs('energy.simulation.*') ? 'sidebar-active' : '' }} hover:bg-green-200">
                         <i class="fas fa-bolt"></i>
                         <span>Simulasi Hemat Energi</span>

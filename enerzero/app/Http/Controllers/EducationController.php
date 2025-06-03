@@ -294,4 +294,5 @@ class EducationController extends Controller
 
         return view('Education.bookmarked', compact('bookmarkedContents'));
     }
+    
 } 
