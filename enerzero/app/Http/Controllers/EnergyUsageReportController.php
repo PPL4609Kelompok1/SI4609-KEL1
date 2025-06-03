@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Report;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\EnergyAlertNotification;
 
 class EnergyUsageReportController extends Controller
 {
@@ -58,7 +60,16 @@ class EnergyUsageReportController extends Controller
             'usage' => 'required|integer',
         ]);
 
-        Report::create($request->only(['month', 'usage']));
+        $report = Report::create($request->only(['month', 'usage']));
+
+        // Kirim notifikasi jika penggunaan lebih dari 150
+        if ($report->usage > 500) {
+            Auth::user()->notify(new EnergyAlertNotification([
+                'message' => 'Penggunaan energi kamu melebihi batas normal! Segera lakukan penghematan.',
+                'url' => route('energy.index')  // Arahkan ke halaman laporan
+            ]));
+        }
+
 
         return redirect()->route('energy.index')->with('success', 'Data added successfully!');
     }

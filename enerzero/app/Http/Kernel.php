@@ -63,4 +63,13 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
     ];
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->call(function () {
+            $users = \App\Models\User::all();
+            foreach ($users as $user) {
+                $user->notify(new \App\Notifications\DailyChallengeNotification());
+            }
+        })->dailyAt('07:00');
+    }
 }

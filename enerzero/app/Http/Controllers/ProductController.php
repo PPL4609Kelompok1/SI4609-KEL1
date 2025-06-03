@@ -18,20 +18,33 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::query()->with('reviews');
+        $searchApplied = false;
     
         if ($request->filled('search')) {
+            $searchApplied = true;
             $query->where('name', 'like', '%' . $request->search . '%')
                   ->orWhere('description', 'like', '%' . $request->search . '%');
         }
     
         if ($request->filled('category')) {
+            $searchApplied = true;
             $query->where('category', $request->category);
         }
     
         $products = $query->paginate(6);
     
+        // If no products found and search/filter was applied, show message
+        if ($products->isEmpty() && $searchApplied) {
+            return view('products.index', [
+                'products' => $products,
+                'noResults' => true,
+                'searchTerm' => $request->search,
+                'category' => $request->category
+            ]);
+        }
+    
         // If no products found and no search/filter applied, show all products
-        if ($products->isEmpty() && !$request->filled('search') && !$request->filled('category')) {
+        if ($products->isEmpty() && !$searchApplied) {
             $products = Product::with('reviews')->paginate(6);
         }
     
@@ -41,6 +54,7 @@ class ProductController extends Controller
     public function show(Product $product, Request $request)
     {
         $product->load('reviews');
+
         $user = Auth::user();
 
         // Dummy data for recommendations
@@ -81,7 +95,6 @@ class ProductController extends Controller
         $recommendations = collect($dummyProducts)->map(function($product) {
             return (object) $product;
         });
-
         return view('products.show', compact('product', 'recommendations', 'user'));
     }
 

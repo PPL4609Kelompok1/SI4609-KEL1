@@ -71,19 +71,38 @@ class DeviceController extends Controller
 
     public function edit(Device $device)
     {
-        if ($device->user_id !== Auth::id()) {
-            abort(403);
+        try {
+            $user = Auth::user();
+            $device = Device::where('id', $device->id)
+                ->where('user_id', $user->id)
+                ->first();
+
+            if (!$device) {
+                return redirect()->route('devices.index')
+                    ->with('error', 'Perangkat tidak ditemukan atau Anda tidak memiliki akses untuk mengedit perangkat ini');
+            }
+
+            return view('devices.edit', compact('device'));
+        } catch (\Exception $e) {
+            \Log::error('Error in DeviceController@edit: ' . $e->getMessage());
+            return redirect()->route('devices.index')
+                ->with('error', 'Terjadi kesalahan saat mengakses halaman edit: ' . $e->getMessage());
         }
-        return view('devices.edit', compact('device'));
     }
 
     public function update(Request $request, Device $device)
     {
-        if ($device->user_id !== Auth::id()) {
-            abort(403);
-        }
-
         try {
+            $user = Auth::user();
+            $device = Device::where('id', $device->id)
+                ->where('user_id', $user->id)
+                ->first();
+
+            if (!$device) {
+                return redirect()->route('devices.index')
+                    ->with('error', 'Perangkat tidak ditemukan atau Anda tidak memiliki akses untuk mengedit perangkat ini');
+            }
+
             $request->validate([
                 'name' => 'required|string|max:255',
                 'wattage' => 'required|integer|min:1',
@@ -107,11 +126,17 @@ class DeviceController extends Controller
 
     public function destroy(Device $device)
     {
-        if ($device->user_id !== Auth::id()) {
-            abort(403);
-        }
-
         try {
+            $user = Auth::user();
+            $device = Device::where('id', $device->id)
+                ->where('user_id', $user->id)
+                ->first();
+
+            if (!$device) {
+                return redirect()->route('devices.index')
+                    ->with('error', 'Perangkat tidak ditemukan atau Anda tidak memiliki akses untuk menghapus perangkat ini');
+            }
+
             $device->delete();
             return redirect()->route('devices.index')
                 ->with('success', 'Perangkat berhasil dihapus');

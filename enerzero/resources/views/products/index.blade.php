@@ -32,65 +32,83 @@
         </div>
     </form>
 
-    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach ($products as $product)
-        <article class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
-            <a href="{{ route('products.show', $product->id) }}" class="block">
-                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-center h-40 object-cover rounded mb-4">
-                <h2 class="text-lg font-bold text-green-800">{{ $product->name }}</h2>
-                <p class="text-green-600 font-semibold mb-2">Harga: Rp {{ number_format($product->price, 0, ',', '.') }},-</p>
+    @if(isset($noResults) && $noResults)
+        <div class="bg-white rounded-lg shadow-md p-6 text-center">
+            <i class="fas fa-search text-gray-400 text-5xl mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">Tidak ada produk yang ditemukan</h3>
+            <p class="text-gray-500">
+                @if(request('search'))
+                    Tidak ada produk yang cocok dengan pencarian "{{ request('search') }}"
+                @endif
+                @if(request('category'))
+                    dalam kategori {{ request('category') }}
+                @endif
+            </p>
+            <a href="{{ route('products.index') }}" class="inline-block mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                <i class="fas fa-undo mr-2"></i> Kembali ke Semua Produk
             </a>
-            <p class="text-gray-600 text-sm mb-2">{{ $product->description }}</p>
-            
-            @if($product->reviews->count() > 0)
-                <div class="mt-4 bg-gray-50 p-3 rounded-lg">
-                    <h4 class="font-semibold text-green-800 mb-2">Ulasan:</h4>
-                    @foreach ($product->reviews as $review)
-                        <div class="mb-3 pb-3 border-b border-gray-200 last:border-0">
-                            <div class="flex items-center gap-2 mb-1">
-                                <strong class="text-green-700">{{ $review->username }}</strong>
-                                <span class="text-yellow-500">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <i class="fas fa-star {{ $i <= $review->rating ? 'text-yellow-500' : 'text-gray-300' }}"></i>
-                                    @endfor
-                                </span>
+        </div>
+    @else
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach ($products as $product)
+            <article class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+                <a href="{{ route('products.show', $product->id) }}" class="block">
+                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-center h-40 object-cover rounded mb-4">
+                    <h2 class="text-lg font-bold text-green-800">{{ $product->name }}</h2>
+                    <p class="text-green-600 font-semibold mb-2">Harga: Rp {{ number_format($product->price, 0, ',', '.') }},-</p>
+                </a>
+                <p class="text-gray-600 text-sm mb-2">{{ $product->description }}</p>
+                
+                @if($product->reviews->count() > 0)
+                    <div class="mt-4 bg-gray-50 p-3 rounded-lg">
+                        <h4 class="font-semibold text-green-800 mb-2">Ulasan:</h4>
+                        @foreach ($product->reviews as $review)
+                            <div class="mb-3 pb-3 border-b border-gray-200 last:border-0">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <strong class="text-green-700">{{ $review->username }}</strong>
+                                    <span class="text-yellow-500">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star {{ $i <= $review->rating ? 'text-yellow-500' : 'text-gray-300' }}"></i>
+                                        @endfor
+                                    </span>
+                                </div>
+                                <p class="text-gray-700">{{ $review->comment }}</p>
                             </div>
-                            <p class="text-gray-700">{{ $review->comment }}</p>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-
-            <form action="{{ route('products.reviews.store', $product) }}" method="POST" class="mt-4">
-                @csrf
-                <div class="mb-3">
-                    <label class="block text-sm font-medium text-gray-700">Rating</label>
-                    <div class="flex items-center gap-1 star-rating" data-product-id="{{ $product->id }}">
-                        @for($i = 1; $i <= 5; $i++)
-                            <input type="radio" name="rating" value="{{ $i }}" id="rating{{ $product->id }}_{{ $i }}" required
-                                class="hidden">
-                            <label for="rating{{ $product->id }}_{{ $i }}" class="cursor-pointer text-2xl text-gray-300 hover:text-yellow-500 transition-colors">
-                                <i class="fas fa-star"></i>
-                            </label>
-                        @endfor
+                        @endforeach
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label for="comment" class="block text-sm font-medium text-gray-700">Komentar</label>
-                    <textarea name="comment" id="comment" rows="3" required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
-                    Kirim Ulasan
-                </button>
-            </form>
-        </article>
-        @endforeach
-    </section>
+                @endif
 
-    <div class="mt-8">
-        {{ $products->links() }}
-    </div>
+                <form action="{{ route('products.reviews.store', $product) }}" method="POST" class="mt-4">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium text-gray-700">Rating</label>
+                        <div class="flex items-center gap-1 star-rating" data-product-id="{{ $product->id }}">
+                            @for($i = 1; $i <= 5; $i++)
+                                <input type="radio" name="rating" value="{{ $i }}" id="rating{{ $product->id }}_{{ $i }}" required
+                                    class="hidden">
+                                <label for="rating{{ $product->id }}_{{ $i }}" class="cursor-pointer text-2xl text-gray-300 hover:text-yellow-500 transition-colors">
+                                    <i class="fas fa-star"></i>
+                                </label>
+                            @endfor
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="comment" class="block text-sm font-medium text-gray-700">Komentar</label>
+                        <textarea name="comment" id="comment" rows="3" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
+                        Kirim Ulasan
+                    </button>
+                </form>
+            </article>
+            @endforeach
+        </section>
+
+        <div class="mt-8">
+            {{ $products->links() }}
+        </div>
+    @endif
 </div>
 
 @push('scripts')
