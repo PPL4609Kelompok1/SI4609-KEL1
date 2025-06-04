@@ -1,1 +1,16 @@
 [2025-05-31 18:08:53] local.INFO: OpenChargeMap API response {"count":100,"first_item":267673} 
+[2025-06-03 02:19:27] local.INFO: OpenChargeMap API response {"count":100,"first_item":267673} 
+[2025-06-03 02:35:26] local.INFO: User data: {"id":5,"username":"fghj","email":"fghj@gmail.com","email_verified_at":null,"created_at":"2025-05-29T14:40:49.000000Z","updated_at":"2025-05-29T14:40:49.000000Z"}  
+[2025-06-03 02:35:26] local.INFO: Devices count: 0  
+[2025-06-03 02:35:26] local.INFO: Devices data: []  
+[2025-06-03 02:35:43] local.INFO: Storing device for user: {"id":5,"username":"fghj","email":"fghj@gmail.com","email_verified_at":null,"created_at":"2025-05-29T14:40:49.000000Z","updated_at":"2025-05-29T14:40:49.000000Z"}  
+[2025-06-03 02:35:43] local.INFO: Device created successfully: {"name":"Kipas Angin","wattage":"150","category":"Elektronik","user_id":5,"updated_at":"2025-06-03T02:35:43.000000Z","created_at":"2025-06-03T02:35:43.000000Z","id":1}  
+[2025-06-03 02:35:43] local.INFO: User data: {"id":5,"username":"fghj","email":"fghj@gmail.com","email_verified_at":null,"created_at":"2025-05-29T14:40:49.000000Z","updated_at":"2025-05-29T14:40:49.000000Z"}  
+[2025-06-03 02:35:43] local.INFO: Devices count: 1  
+[2025-06-03 02:35:43] local.INFO: Devices data: [{"id":1,"user_id":5,"name":"Kipas Angin","wattage":150,"category":"Elektronik","created_at":"2025-06-03T02:35:43.000000Z","updated_at":"2025-06-03T02:35:43.000000Z"}]  
+[2025-06-03 02:38:18] local.INFO: User data: {"id":5,"username":"fghj","email":"fghj@gmail.com","email_verified_at":null,"created_at":"2025-05-29T14:40:49.000000Z","updated_at":"2025-05-29T14:40:49.000000Z"}  
+[2025-06-03 02:38:18] local.INFO: Devices count: 1  
+[2025-06-03 02:38:18] local.INFO: Devices data: [{"id":1,"user_id":5,"name":"Kipas Angin","wattage":150,"category":"Elektronik","created_at":"2025-06-03T02:35:43.000000Z","updated_at":"2025-06-03T02:35:43.000000Z"}]  
+[2025-06-03 02:38:25] local.INFO: User data: {"id":5,"username":"fghj","email":"fghj@gmail.com","email_verified_at":null,"created_at":"2025-05-29T14:40:49.000000Z","updated_at":"2025-05-29T14:40:49.000000Z"}  
+[2025-06-03 02:38:25] local.INFO: Devices count: 1  
+[2025-06-03 02:38:25] local.INFO: Devices data: [{"id":1,"user_id":5,"name":"Kipas Angin","wattage":150,"category":"Elektronik","created_at":"2025-06-03T02:35:43.000000Z","updated_at":"2025-06-03T02:35:43.000000Z"}]  

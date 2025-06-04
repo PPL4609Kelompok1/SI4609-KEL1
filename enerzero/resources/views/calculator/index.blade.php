@@ -75,5 +75,44 @@
             <p class="text-gray-500">Anda belum menghitung konsumsi energi untuk perangkat apapun.</p>
         @endif
     </section>
+
+    <section class="bg-white rounded-lg p-6 shadow-md">
+        <h2 class="text-xl font-semibold text-green-700 mb-4">Rekomendasi Produk Hemat Energi</h2>
+
+        @if ($average > 10)
+            <p class="mb-4 text-gray-700">Konsumsi energi Anda cukup tinggi. Berikut beberapa produk hemat energi yang bisa membantu menurunkan konsumsi listrik:</p>
+            <ul class="space-y-4">
+                <li class="flex justify-between items-start gap-4 bg-gray-50 p-3 rounded-md">
+                    <div>
+                        <strong>
+                            <a href="{{ url('/products/3') }}" class="text-green-700 hover:underline">
+                                Lampu Tenaga Surya Otomatis
+                            </a>
+                        </strong> - Lampu otomatis dengan panel surya untuk taman atau jalanan
+                    </div>
+                    <a href="{{ url('/products/3') }}" class="shrink-0 bg-green-600 text-white px-3 py-1 text-sm rounded hover:bg-green-500 self-start">
+                        Lihat Produk
+                    </a>
+                </li>
+                <li class="flex justify-between items-start gap-4 bg-gray-50 p-3 rounded-md">
+                    <div>
+                        <strong>
+                            <a href="{{ url('/products/1') }}" class="text-green-700 hover:underline">
+                                LYUMO US
+                            </a>
+                        </strong> - 24KW Home Electricity - Energy Factor Saver Electronic
+                    </div>
+                    <a href="{{ url('/products/1') }}" class="shrink-0 bg-green-600 text-white px-3 py-1 text-sm rounded hover:bg-green-500 self-start">
+                        Lihat Produk
+                    </a>
+                </li>
+            </ul>
+        @elseif ($average < 10)
+            <p class="mb-4 text-green-700 font-semibold">Konsumsi energi Anda sudah sangat rendah dan efisien</p>
+            <p class="text-gray-700">Pertahankan kebiasaan hemat energi Anda. Tidak ada rekomendasi tambahan karena Anda sudah sangat bijak menggunakan listrik!</p>
+        @else
+            <p class="text-gray-700">Belum ada data konsumsi. Masukkan perangkat untuk mendapatkan rekomendasi hemat energi!</p>
+        @endif
+    </section>
 </div>
 @endsection
